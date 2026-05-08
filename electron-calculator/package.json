@@ -1,0 +1,29 @@
+{
+  "name": "smart-calculator",
+  "version": "1.0.0",
+  "description": "智能计算器 - Smart Calculator with History",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.smartcalculator.app",
+    "productName": "Smart Calculator",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "files": [
+      "**/*"
+    ]
+  }
+}

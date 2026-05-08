@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能计算器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .calculator {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 340px;
+    }
+
+    .history-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      color: #888;
+      font-size: 13px;
+    }
+
+    .history-toggle span {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .history-toggle span:hover {
+      color: #e94560;
+    }
+
+    .history-panel {
+      background: #0f0f23;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .history-panel.open {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #222;
+      color: #888;
+      font-size: 13px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item:hover {
+      color: #e94560;
+    }
+
+    .history-item .expr {
+      color: #666;
+    }
+
+    .history-item .result {
+      color: #fff;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    .history-empty {
+      color: #555;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .display {
+      background: #0f0f23;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: right;
+      margin-bottom: 16px;
+      min-height: 80px;
+    }
+
+    .display-expression {
+      color: #888;
+      font-size: 14px;
+      min-height: 22px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .display-result {
+      color: #fff;
+      font-size: 36px;
+      font-weight: 300;
+      word-break: break-all;
+      margin-top: 4px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      padding: 18px;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.15s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .btn-number {
+      background: #1f4068;
+      color: #fff;
+    }
+
+    .btn-number:hover {
+      background: #2a5080;
+    }
+
+    .btn-operator {
+      background: #e94560;
+      color: #fff;
+    }
+
+    .btn-operator:hover {
+      background: #ff5a75;
+    }
+
+    .btn-equals {
+      background: #0f3460;
+      color: #fff;
+      grid-column: span 2;
+    }
+
+    .btn-equals:hover {
+      background: #1a4a80;
+    }
+
+    .btn-clear {
+      background: #4a4a6a;
+      color: #fff;
+    }
+
+    .btn-clear:hover {
+      background: #5a5a7a;
+    }
+
+    .btn-back {
+      background: #4a4a6a;
+      color: #fff;
+    }
+
+    .btn-back:hover {
+      background: #5a5a7a;
+    }
+
+    .clear-history-btn {
+      font-size: 11px;
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid #444;
+      color: #666;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .clear-history-btn:hover {
+      border-color: #e94560;
+      color: #e94560;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="history-toggle">
+      <span onclick="toggleHistory()">📜 历史记录 <span id="history-count">(0)</span></span>
+      <button class="clear-history-btn" onclick="clearHistory()">清空</button>
+    </div>
+    <div class="history-panel" id="history-panel">
+      <div id="history-list">
+        <div class="history-empty">暂无历史记录</div>
+      </div>
+    </div>
+
+    <div class="display">
+      <div class="display-expression" id="expression"></div>
+      <div class="display-result" id="result">0</div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn-clear" onclick="clearAll()">C</button>
+      <button class="btn-operator" onclick="append('(')">(</button>
+      <button class="btn-operator" onclick="append(')')">)</button>
+      <button class="btn-back" onclick="backspace()">⌫</button>
+
+      <button class="btn-number" onclick="append('7')">7</button>
+      <button class="btn-number" onclick="append('8')">8</button>
+      <button class="btn-number" onclick="append('9')">9</button>
+      <button class="btn-operator" onclick="append('/')">÷</button>
+
+      <button class="btn-number" onclick="append('4')">4</button>
+      <button class="btn-number" onclick="append('5')">5</button>
+      <button class="btn-number" onclick="append('6')">6</button>
+      <button class="btn-operator" onclick="append('*')">×</button>
+
+      <button class="btn-number" onclick="append('1')">1</button>
+      <button class="btn-number" onclick="append('2')">2</button>
+      <button class="btn-number" onclick="append('3')">3</button>
+      <button class="btn-operator" onclick="append('-')">−</button>
+
+      <button class="btn-number" onclick="append('0')">0</button>
+      <button class="btn-number" onclick="append('.')">.</button>
+      <button class="btn-equals" onclick="calculate()">=</button>
+      <button class="btn-operator" onclick="append('+')">+</button>
+    </div>
+  </div>
+
+  <script>
+    const resultEl = document.getElementById('result');
+    const expressionEl = document.getElementById('expression');
+    const historyPanel = document.getElementById('history-panel');
+    const historyList = document.getElementById('history-list');
+    const historyCountEl = document.getElementById('history-count');
+
+    let currentInput = '';
+    let history = [];
+    let historyOpen = false;
+
+    function updateDisplay() {
+      resultEl.textContent = currentInput || '0';
+      expressionEl.textContent = '';
+    }
+
+    function toggleHistory() {
+      historyOpen = !historyOpen;
+      historyPanel.classList.toggle('open', historyOpen);
+    }
+
+    function renderHistory() {
+      historyCountEl.textContent = `(${history.length})`;
+      if (history.length === 0) {
+        historyList.innerHTML = '<div class="history-empty">暂无历史记录</div>';
+        return;
+      }
+      historyList.innerHTML = history.map((item, i) => `
+        <div class="history-item" onclick="useHistory(${i})">
+          <span class="expr">${item.expr}</span>
+          <span class="result">= ${item.result}</span>
+        </div>
+      `).join('');
+    }
+
+    function useHistory(index) {
+      currentInput = history[index].result;
+      updateDisplay();
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+    }
+
+    function append(value) {
+      if (currentInput === 'Error') {
+        currentInput = '';
+      }
+      currentInput += value;
+      updateDisplay();
+      updatePreview();
+    }
+
+    function clearAll() {
+      currentInput = '';
+      expressionEl.textContent = '';
+      resultEl.textContent = '0';
+    }
+
+    function backspace() {
+      if (currentInput.length > 0) {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+        updatePreview();
+      }
+    }
+
+    function updatePreview() {
+      if (!currentInput) {
+        expressionEl.textContent = '';
+        return;
+      }
+
+      try {
+        const expr = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
+        const result = evaluateExpression(expr);
+
+        if (typeof result === 'number' && isFinite(result)) {
+          if (Number.isInteger(result)) {
+            expressionEl.textContent = result;
+          } else {
+            expressionEl.textContent = result.toFixed(4).replace(/\.?0+$/, '');
+          }
+        }
+      } catch (e) {
+        expressionEl.textContent = '';
+      }
+    }
+
+    function evaluateExpression(expr) {
+      // Handle empty or single value
+      if (!expr) return 0;
+
+      // Replace display operators
+      let processed = expr.replace(/×/g, '*').replace(/÷/g, '/');
+
+      // Parse using a simple recursive descent parser for better accuracy
+      let pos = 0;
+
+      function parseExpression() {
+        let left = parseTerm();
+
+        while (pos < processed.length) {
+          const op = processed[pos];
+          if (op === '+' || op === '-') {
+            pos++;
+            let right = parseTerm();
+            left = op === '+' ? left + right : left - right;
+          } else {
+            break;
+          }
+        }
+        return left;
+      }
+
+      function parseTerm() {
+        let left = parseFactor();
+
+        while (pos < processed.length) {
+          const op = processed[pos];
+          if (op === '*' || op === '/') {
+            pos++;
+            let right = parseFactor();
+            if (op === '/') {
+              if (right === 0) throw new Error('Division by zero');
+              left = left / right;
+            } else {
+              left = left * right;
+            }
+          } else {
+            break;
+          }
+        }
+        return left;
+      }
+
+      function parseFactor() {
+        // Handle unary minus
+        if (processed[pos] === '-') {
+          pos++;
+          return -parseFactor();
+        }
+
+        let result = 0;
+        let numStr = '';
+
+        // Read number
+        while (pos < processed.length && /[0-9.]/.test(processed[pos])) {
+          numStr += processed[pos++];
+        }
+
+        if (numStr) {
+          result = parseFloat(numStr);
+        } else if (processed[pos] === '(') {
+          pos++; // skip (
+          result = parseExpression();
+          if (processed[pos] === ')') pos++; // skip )
+        }
+
+        return result;
+      }
+
+      return parseExpression();
+    }
+
+    function calculate() {
+      if (!currentInput) return;
+
+      try {
+        const expr = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
+        const result = evaluateExpression(expr);
+
+        if (!isFinite(result)) {
+          expressionEl.textContent = currentInput + ' =';
+          resultEl.textContent = 'Error';
+          currentInput = 'Error';
+          return;
+        }
+
+        // Format result
+        let resultStr;
+        if (Number.isInteger(result)) {
+          resultStr = String(result);
+        } else {
+          resultStr = result.toFixed(8).replace(/\.?0+$/, '');
+        }
+
+        // Add to history
+        history.unshift({ expr: currentInput, result: resultStr });
+        if (history.length > 50) history.pop();
+        renderHistory();
+
+        expressionEl.textContent = currentInput + ' =';
+        resultEl.textContent = resultStr;
+        currentInput = '';
+      } catch (e) {
+        resultEl.textContent = 'Error';
+        currentInput = 'Error';
+      }
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') {
+        append(e.key);
+      } else if (e.key === '.') {
+        append('.');
+      } else if (e.key === '+') {
+        append('+');
+      } else if (e.key === '-') {
+        append('-');
+      } else if (e.key === '*') {
+        append('×');
+      } else if (e.key === '/') {
+        e.preventDefault();
+        append('÷');
+      } else if (e.key === '(' || e.key === ')') {
+        append(e.key);
+      } else if (e.key === 'Enter' || e.key === '=') {
+        e.preventDefault();
+        calculate();
+      } else if (e.key === 'Backspace') {
+        backspace();
+      } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+        clearAll();
+      }
+    });
+
+    // Initial render
+    renderHistory();
+  </script>
+</body>
+</html>
