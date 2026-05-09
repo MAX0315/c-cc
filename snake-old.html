@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贪吃蛇</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0a0a1a;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 {
+      color: #4ade80;
+      font-size: 24px;
+      text-shadow: 0 0 20px #4ade80, 0 0 40px #4ade80;
+      letter-spacing: 2px;
+    }
+
+    #score {
+      color: #f8fafc;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    #gameCanvas {
+      border: 4px solid #4ade80;
+      border-radius: 4px;
+      box-shadow: 0 0 30px rgba(74, 222, 128, 0.3),
+                  inset 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+
+    #instructions {
+      color: #94a3b8;
+      font-size: 10px;
+      text-align: center;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>SNAKE</h1>
+    <div id="score">SCORE: 0</div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="instructions">
+      ARROW KEYS TO MOVE<br>
+      BOOST: CYAN ORB = SPEED UP<br>
+      SPACE / ENTER TO RESTART
+    </div>
+    <div id="boostIndicator" style="color:#06b6d4;font-size:12px;height:16px;text-shadow:0 0 10px #06b6d4;"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const boostEl = document.getElementById('boostIndicator');
+
+    const GRID = 20;
+    const CELL = canvas.width / GRID;
+    const NORMAL_SPEED = 150;
+    const BOOST_SPEED = 80;
+    const BOOST_DURATION = 5000;
+
+    let snake, direction, food, powerUp, score, gameOver, animFrame;
+    let speedBoostUntil = 0;
+
+    function init() {
+      snake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
+      ];
+      direction = { x: 1, y: 0 };
+      score = 0;
+      gameOver = false;
+      speedBoostUntil = 0;
+      spawnFood();
+      powerUp = null;
+      updateScore();
+    }
+
+    function spawnFood() {
+      let pos;
+      do {
+        pos = {
+          x: Math.floor(Math.random() * GRID),
+          y: Math.floor(Math.random() * GRID)
+        };
+      } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+      food = pos;
+    }
+
+    function spawnPowerUp() {
+      if (powerUp) return;
+      if (Math.random() > 0.3) return;
+      let pos;
+      do {
+        pos = {
+          x: Math.floor(Math.random() * GRID),
+          y: Math.floor(Math.random() * GRID)
+        };
+      } while (snake.some(s => s.x === pos.x && s.y === pos.y) || (food.x === pos.x && food.y === pos.y));
+      powerUp = pos;
+    }
+
+    function updateScore() {
+      scoreEl.textContent = `SCORE: ${score}`;
+    }
+
+    function draw() {
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'rgba(74, 222, 128, 0.1)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= GRID; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * CELL, 0);
+        ctx.lineTo(i * CELL, canvas.height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, i * CELL);
+        ctx.lineTo(canvas.width, i * CELL);
+        ctx.stroke();
+      }
+
+      snake.forEach((seg, i) => {
+        const isHead = i === 0;
+        const green = isHead ? '#4ade80' : `rgb(${34 + i * 8}, ${200 - i * 5}, ${80 + i * 3})`;
+        const size = isHead ? CELL - 2 : CELL - 4;
+        const offset = isHead ? 1 : 2;
+
+        ctx.fillStyle = green;
+        ctx.shadowColor = green;
+        ctx.shadowBlur = isHead ? 15 : 5;
+        ctx.beginPath();
+        ctx.roundRect(
+          seg.x * CELL + offset,
+          seg.y * CELL + offset,
+          size, size, 4
+        );
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      const pulse = 0.7 + 0.3 * Math.sin(Date.now() / 200);
+      ctx.fillStyle = '#ef4444';
+      ctx.shadowColor = '#ef4444';
+      ctx.shadowBlur = 15 * pulse;
+      ctx.beginPath();
+      ctx.arc(
+        food.x * CELL + CELL / 2,
+        food.y * CELL + CELL / 2,
+        CELL / 2 - 3, 0, Math.PI * 2
+      );
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      if (powerUp) {
+        const t = Date.now();
+        const remaining = speedBoostUntil > t;
+        const boostPulse = 0.6 + 0.4 * Math.sin(t / 150);
+        ctx.fillStyle = remaining ? '#06b6d4' : '#a855f7';
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 20 * boostPulse;
+        ctx.beginPath();
+        ctx.arc(
+          powerUp.x * CELL + CELL / 2,
+          powerUp.y * CELL + CELL / 2,
+          CELL / 2 - 2, 0, Math.PI * 2
+        );
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('»', powerUp.x * CELL + CELL / 2, powerUp.y * CELL + CELL / 2 + 4);
+        ctx.textAlign = 'left';
+      }
+
+      if (gameOver) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = '24px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 20;
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '14px "Press Start 2P", monospace';
+        ctx.shadowBlur = 0;
+        ctx.fillText(`SCORE: ${score}`, canvas.width / 2, canvas.height / 2);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.fillText('SPACE / ENTER TO RESTART', canvas.width / 2, canvas.height / 2 + 40);
+      }
+
+      if (Date.now() < speedBoostUntil) {
+        const left = Math.ceil((speedBoostUntil - Date.now()) / 1000);
+        boostEl.textContent = `⚡ BOOST: ${left}s`;
+      } else {
+        boostEl.textContent = '';
+      }
+    }
+
+    function update() {
+      if (gameOver) return;
+
+      const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+      if (head.x < 0 || head.x >= GRID || head.y < 0 || head.y >= GRID) {
+        gameOver = true;
+        draw();
+        return;
+      }
+
+      if (snake.some(s => s.x === head.x && s.y === head.y)) {
+        gameOver = true;
+        draw();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        updateScore();
+        spawnFood();
+        spawnPowerUp();
+      } else {
+        snake.pop();
+      }
+
+      if (powerUp && head.x === powerUp.x && head.y === powerUp.y) {
+        speedBoostUntil = Date.now() + BOOST_DURATION;
+        powerUp = null;
+      }
+    }
+
+    function getSpeed() {
+      return Date.now() < speedBoostUntil ? BOOST_SPEED : NORMAL_SPEED;
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animFrame = setTimeout(gameLoop, getSpeed());
+    }
+
+    document.addEventListener('keydown', e => {
+      if (gameOver) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          clearTimeout(animFrame);
+          init();
+          gameLoop();
+        }
+        return;
+      }
+
+      const key = e.key;
+      if (key === 'ArrowUp' && direction.y !== 1) {
+        direction = { x: 0, y: -1 };
+      } else if (key === 'ArrowDown' && direction.y !== -1) {
+        direction = { x: 0, y: 1 };
+      } else if (key === 'ArrowLeft' && direction.x !== 1) {
+        direction = { x: -1, y: 0 };
+      } else if (key === 'ArrowRight' && direction.x !== -1) {
+        direction = { x: 1, y: 0 };
+      }
+    });
+
+    init();
+    gameLoop();
+  </script>
+</body>
+</html>
