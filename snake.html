@@ -3,9 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>贪吃蛇</title>
+  <title>贪吃蛇 | CYBER SNAKE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    :root {
+      --bg-deep: #030308;
+      --bg-dark: #0a0a12;
+      --neon-green: #00ff88;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff0066;
+      --neon-purple: #b300ff;
+      --neon-yellow: #ffee00;
+      --grid-color: rgba(0, 255, 136, 0.06);
+      --text-dim: #4a5568;
+    }
 
     * {
       margin: 0;
@@ -18,86 +31,439 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #0a0a1a;
-      font-family: 'Press Start 2P', monospace;
+      background: var(--bg-deep);
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 240, 255, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(179, 0, 255, 0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .game-wrapper {
+      position: relative;
+      z-index: 1;
     }
 
     .game-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 8px;
+    }
+
+    .title-section {
+      text-align: center;
     }
 
     h1 {
-      color: #4ade80;
-      font-size: 24px;
-      text-shadow: 0 0 20px #4ade80, 0 0 40px #4ade80;
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 32px;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-cyan) 50%, var(--neon-green) 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
+      text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+      filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3));
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      color: var(--neon-cyan);
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 32px;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-dim);
       letter-spacing: 2px;
     }
 
-    #score {
-      color: #f8fafc;
-      font-size: 14px;
-      letter-spacing: 1px;
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--neon-green);
+      text-shadow: 0 0 20px var(--neon-green);
+      transition: all 0.15s ease;
+    }
+
+    .stat-value.pulse {
+      transform: scale(1.3);
+      color: var(--neon-yellow);
+      text-shadow: 0 0 30px var(--neon-yellow);
+    }
+
+    .canvas-frame {
+      position: relative;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      background-size: 300% 300%;
+      animation: borderGlow 4s ease infinite;
+      border-radius: 4px;
+      box-shadow:
+        0 0 40px rgba(0, 255, 136, 0.3),
+        0 0 80px rgba(0, 240, 255, 0.2),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .canvas-inner {
+      position: relative;
+      background: var(--bg-dark);
+      border-radius: 2px;
+      overflow: hidden;
     }
 
     #gameCanvas {
-      border: 4px solid #4ade80;
-      border-radius: 4px;
-      box-shadow: 0 0 30px rgba(74, 222, 128, 0.3),
-                  inset 0 0 60px rgba(0, 0, 0, 0.5);
+      display: block;
     }
 
-    #instructions {
-      color: #94a3b8;
-      font-size: 10px;
-      text-align: center;
-      line-height: 1.8;
+    .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+      );
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    .corner-accent {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--neon-cyan);
+      opacity: 0.6;
+    }
+
+    .corner-accent.tl { top: -8px; left: -8px; border-right: none; border-bottom: none; }
+    .corner-accent.tr { top: -8px; right: -8px; border-left: none; border-bottom: none; }
+    .corner-accent.bl { bottom: -8px; left: -8px; border-right: none; border-top: none; }
+    .corner-accent.br { bottom: -8px; right: -8px; border-left: none; border-top: none; }
+
+    .boost-indicator {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .boost-text {
+      font-family: 'Orbitron', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 20px var(--neon-cyan);
+      animation: boostPulse 0.5s ease infinite;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .boost-text.active {
+      opacity: 1;
+    }
+
+    @keyframes boostPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .instructions {
+      display: flex;
+      gap: 24px;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    .instruction-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .key {
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      font-family: 'Orbitron', monospace;
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleFade 0.8s ease-out forwards;
+    }
+
+    @keyframes particleFade {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .screen-shake {
+      animation: shake 0.15s ease-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-4px, 2px); }
+      50% { transform: translate(4px, -2px); }
+      75% { transform: translate(-2px, 4px); }
+    }
+
+    .game-over-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(3, 3, 8, 0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .game-over-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .game-over-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--neon-pink);
+      text-shadow:
+        0 0 20px var(--neon-pink),
+        0 0 40px var(--neon-pink),
+        0 0 60px var(--neon-pink);
+      animation: glitch 0.3s ease infinite;
+      letter-spacing: 4px;
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-1px, -1px); }
+      80% { transform: translate(1px, 1px); }
+    }
+
+    .final-score {
+      font-family: 'Orbitron', monospace;
+      font-size: 20px;
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .restart-hint {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      color: var(--neon-cyan);
+      letter-spacing: 2px;
+      animation: blink 1s ease infinite;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.4; }
+    }
+
+    .high-score {
+      font-family: 'Orbitron', monospace;
+      font-size: 12px;
+      color: var(--neon-purple);
+      text-shadow: 0 0 10px var(--neon-purple);
     }
   </style>
 </head>
 <body>
-  <div class="game-container">
-    <h1>SNAKE</h1>
-    <div id="score">SCORE: 0</div>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <div id="instructions">
-      ARROW KEYS TO MOVE<br>
-      BOOST: CYAN ORB = SPEED UP<br>
-      SPACE / ENTER TO RESTART
+  <div class="particles-container" id="particles"></div>
+
+  <div class="game-wrapper">
+    <div class="game-container">
+      <div class="header">
+        <div class="title-section">
+          <h1>CYBER SNAKE</h1>
+          <div class="subtitle">NEON EDITION</div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-label">SCORE</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">HIGH</span>
+          <span class="stat-value" id="highScore">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">LEVEL</span>
+          <span class="stat-value" id="level">1</span>
+        </div>
+      </div>
+
+      <div class="canvas-frame" id="canvasFrame">
+        <div class="canvas-inner">
+          <canvas id="gameCanvas" width="480" height="480"></canvas>
+          <div class="scanline"></div>
+          <div class="corner-accent tl"></div>
+          <div class="corner-accent tr"></div>
+          <div class="corner-accent bl"></div>
+          <div class="corner-accent br"></div>
+
+          <div class="game-over-overlay" id="gameOverlay">
+            <div class="game-over-title">GAME OVER</div>
+            <div class="final-score" id="finalScore">SCORE: 0</div>
+            <div class="high-score" id="highScoreText">NEW HIGH SCORE!</div>
+            <div class="restart-hint">PRESS SPACE OR ENTER TO RESTART</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="boost-indicator">
+        <span class="boost-text" id="boostText">⚡ TURBO MODE ACTIVE</span>
+      </div>
+
+      <div class="instructions">
+        <div class="instruction-item">
+          <span class="key">↑ ↓ ← →</span>
+          <span>MOVE</span>
+        </div>
+        <div class="instruction-item">
+          <span class="key" style="background: rgba(0, 240, 255, 0.1); border-color: var(--neon-cyan);">CYAN ORB</span>
+          <span>= SPEED BOOST</span>
+        </div>
+        <div class="instruction-item">
+          <span class="key" style="background: rgba(179, 0, 255, 0.1); border-color: var(--neon-purple);">PURPLE ORB</span>
+          <span>= SUPER BOOST</span>
+        </div>
+      </div>
     </div>
-    <div id="boostIndicator" style="color:#06b6d4;font-size:12px;height:16px;text-shadow:0 0 10px #06b6d4;"></div>
   </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('score');
-    const boostEl = document.getElementById('boostIndicator');
+    const highScoreEl = document.getElementById('highScore');
+    const levelEl = document.getElementById('level');
+    const boostTextEl = document.getElementById('boostText');
+    const canvasFrame = document.getElementById('canvasFrame');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const finalScoreEl = document.getElementById('finalScore');
+    const highScoreTextEl = document.getElementById('highScoreText');
+    const particlesContainer = document.getElementById('particles');
 
-    const GRID = 20;
+    const GRID = 24;
     const CELL = canvas.width / GRID;
-    const NORMAL_SPEED = 150;
-    const BOOST_SPEED = 80;
+    const NORMAL_SPEED = 140;
+    const BOOST_SPEED = 70;
+    const SUPER_BOOST_SPEED = 45;
     const BOOST_DURATION = 5000;
+    const SUPER_BOOST_DURATION = 3000;
 
-    let snake, direction, food, powerUp, score, gameOver, animFrame;
-    let speedBoostUntil = 0;
+    let snake, direction, food, powerUp, superPowerUp, score, gameOver, animFrame;
+    let speedBoostUntil = 0, superBoostUntil = 0, highScore = 0;
+    let lastRenderTime = 0;
+    let foodPulse = 0;
+    let trailSegments = [];
 
     function init() {
       snake = [
-        { x: 10, y: 10 },
-        { x: 9, y: 10 },
-        { x: 8, y: 10 }
+        { x: 12, y: 12 },
+        { x: 11, y: 12 },
+        { x: 10, y: 12 }
       ];
       direction = { x: 1, y: 0 };
       score = 0;
       gameOver = false;
       speedBoostUntil = 0;
+      superBoostUntil = 0;
+      trailSegments = [];
       spawnFood();
       powerUp = null;
+      superPowerUp = null;
       updateScore();
+      updateLevel();
+      gameOverlay.classList.remove('active');
     }
 
     function spawnFood() {
@@ -111,28 +477,85 @@
       food = pos;
     }
 
-    function spawnPowerUp() {
-      if (powerUp) return;
-      if (Math.random() > 0.3) return;
+    function spawnPowerUp(type = 'speed') {
+      const target = type === 'speed' ? powerUp : superPowerUp;
+      if (target) return;
+      if (Math.random() > 0.25) return;
       let pos;
       do {
         pos = {
           x: Math.floor(Math.random() * GRID),
           y: Math.floor(Math.random() * GRID)
         };
-      } while (snake.some(s => s.x === pos.x && s.y === pos.y) || (food.x === pos.x && food.y === pos.y));
-      powerUp = pos;
+      } while (
+        snake.some(s => s.x === pos.x && s.y === pos.y) ||
+        (food.x === pos.x && food.y === pos.y) ||
+        (powerUp && powerUp.x === pos.x && powerUp.y === pos.y) ||
+        (superPowerUp && superPowerUp.x === pos.x && superPowerUp.y === pos.y)
+      );
+      if (type === 'speed') {
+        powerUp = pos;
+      } else {
+        superPowerUp = pos;
+      }
+    }
+
+    function createParticles(x, y, color, count = 12) {
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const angle = (Math.PI * 2 * i) / count;
+        const velocity = 60 + Math.random() * 60;
+        const size = 4 + Math.random() * 6;
+        particle.style.cssText = `
+          width: ${size}px;
+          height: ${size}px;
+          background: ${color};
+          box-shadow: 0 0 ${size * 2}px ${color};
+          left: ${x}px;
+          top: ${y}px;
+          transform: translate(-50%, -50%);
+        `;
+        particlesContainer.appendChild(particle);
+
+        const destX = x + Math.cos(angle) * velocity;
+        const destY = y + Math.sin(angle) * velocity;
+        particle.animate([
+          { left: `${x}px`, top: `${y}px`, opacity: 1 },
+          { left: `${destX}px`, top: `${destY}px`, opacity: 0 }
+        ], {
+          duration: 600 + Math.random() * 400,
+          easing: 'ease-out'
+        }).onfinish = () => particle.remove();
+      }
+    }
+
+    function screenShake() {
+      canvasFrame.classList.remove('screen-shake');
+      void canvasFrame.offsetWidth;
+      canvasFrame.classList.add('screen-shake');
+    }
+
+    function pulseScore() {
+      scoreEl.classList.add('pulse');
+      setTimeout(() => scoreEl.classList.remove('pulse'), 150);
     }
 
     function updateScore() {
-      scoreEl.textContent = `SCORE: ${score}`;
+      scoreEl.textContent = score;
+      if (score > highScore) {
+        highScore = score;
+        highScoreEl.textContent = highScore;
+      }
     }
 
-    function draw() {
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function updateLevel() {
+      const level = Math.floor(score / 100) + 1;
+      levelEl.textContent = level;
+    }
 
-      ctx.strokeStyle = 'rgba(74, 222, 128, 0.1)';
+    function drawGrid() {
+      ctx.strokeStyle = 'rgba(0, 255, 136, 0.04)';
       ctx.lineWidth = 1;
       for (let i = 0; i <= GRID; i++) {
         ctx.beginPath();
@@ -144,89 +567,197 @@
         ctx.lineTo(canvas.width, i * CELL);
         ctx.stroke();
       }
+    }
+
+    function drawSnake() {
+      trailSegments.forEach((seg, i) => {
+        const alpha = (1 - i / trailSegments.length) * 0.3;
+        ctx.fillStyle = `rgba(0, 255, 136, ${alpha})`;
+        ctx.beginPath();
+        ctx.roundRect(seg.x * CELL + 4, seg.y * CELL + 4, CELL - 8, CELL - 8, 3);
+        ctx.fill();
+      });
 
       snake.forEach((seg, i) => {
         const isHead = i === 0;
-        const green = isHead ? '#4ade80' : `rgb(${34 + i * 8}, ${200 - i * 5}, ${80 + i * 3})`;
-        const size = isHead ? CELL - 2 : CELL - 4;
-        const offset = isHead ? 1 : 2;
+        const progress = i / snake.length;
 
-        ctx.fillStyle = green;
-        ctx.shadowColor = green;
-        ctx.shadowBlur = isHead ? 15 : 5;
+        let green, blue;
+        if (isHead) {
+          green = 255;
+          blue = 136;
+        } else {
+          green = 255 - progress * 80;
+          blue = 136 - progress * 60;
+        }
+
+        const color = `rgb(0, ${green}, ${blue})`;
+        const size = isHead ? CELL - 2 : CELL - 4 - Math.min(i * 0.3, 4);
+        const offset = (CELL - size) / 2;
+
+        ctx.shadowColor = color;
+        ctx.shadowBlur = isHead ? 20 : 10;
+        ctx.fillStyle = color;
+
+        if (isHead) {
+          ctx.shadowBlur = 25;
+          ctx.fillStyle = '#00ff88';
+          ctx.shadowColor = '#00ff88';
+        }
+
         ctx.beginPath();
-        ctx.roundRect(
-          seg.x * CELL + offset,
-          seg.y * CELL + offset,
-          size, size, 4
-        );
+        ctx.roundRect(seg.x * CELL + offset, seg.y * CELL + offset, size, size, isHead ? 6 : 4);
         ctx.fill();
+
+        if (isHead) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+          const eyeSize = 4;
+          const eyeOffset = 5;
+          let eye1x, eye1y, eye2x, eye2y;
+
+          if (direction.x === 1) {
+            eye1x = seg.x * CELL + CELL - eyeOffset - 2;
+            eye1y = seg.y * CELL + eyeOffset;
+            eye2x = seg.x * CELL + CELL - eyeOffset - 2;
+            eye2y = seg.y * CELL + CELL - eyeOffset - eyeSize;
+          } else if (direction.x === -1) {
+            eye1x = seg.x * CELL + eyeOffset - 2;
+            eye1y = seg.y * CELL + eyeOffset;
+            eye2x = seg.x * CELL + eyeOffset - 2;
+            eye2y = seg.y * CELL + CELL - eyeOffset - eyeSize;
+          } else if (direction.y === 1) {
+            eye1x = seg.x * CELL + eyeOffset;
+            eye1y = seg.y * CELL + CELL - eyeOffset - 2;
+            eye2x = seg.x * CELL + CELL - eyeOffset - eyeSize;
+            eye2y = seg.y * CELL + CELL - eyeOffset - 2;
+          } else {
+            eye1x = seg.x * CELL + eyeOffset;
+            eye1y = seg.y * CELL + eyeOffset - 2;
+            eye2x = seg.x * CELL + CELL - eyeOffset - eyeSize;
+            eye2y = seg.y * CELL + eyeOffset - 2;
+          }
+
+          ctx.beginPath();
+          ctx.roundRect(eye1x, eye1y, eyeSize, eyeSize, 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.roundRect(eye2x, eye2y, eyeSize, eyeSize, 2);
+          ctx.fill();
+        }
+
         ctx.shadowBlur = 0;
       });
+    }
 
-      const pulse = 0.7 + 0.3 * Math.sin(Date.now() / 200);
-      ctx.fillStyle = '#ef4444';
-      ctx.shadowColor = '#ef4444';
-      ctx.shadowBlur = 15 * pulse;
-      ctx.beginPath();
-      ctx.arc(
-        food.x * CELL + CELL / 2,
-        food.y * CELL + CELL / 2,
-        CELL / 2 - 3, 0, Math.PI * 2
+    function drawFood() {
+      if (!food) return;
+      foodPulse += 0.08;
+      const pulse = 0.8 + 0.2 * Math.sin(foodPulse);
+      const size = (CELL / 2 - 4) * pulse;
+
+      ctx.shadowColor = '#ff0066';
+      ctx.shadowBlur = 20 * pulse;
+      ctx.fillStyle = '#ff0066';
+
+      const gradient = ctx.createRadialGradient(
+        food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, 0,
+        food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, size
       );
+      gradient.addColorStop(0, '#ff4488');
+      gradient.addColorStop(0.5, '#ff0066');
+      gradient.addColorStop(1, '#cc0044');
+      ctx.fillStyle = gradient;
+
+      ctx.beginPath();
+      ctx.arc(food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, size, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.beginPath();
+      ctx.arc(food.x * CELL + CELL / 2 - 3, food.y * CELL + CELL / 2 - 3, size * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+
       ctx.shadowBlur = 0;
+    }
+
+    function drawPowerUps() {
+      const t = Date.now();
 
       if (powerUp) {
-        const t = Date.now();
         const remaining = speedBoostUntil > t;
-        const boostPulse = 0.6 + 0.4 * Math.sin(t / 150);
-        ctx.fillStyle = remaining ? '#06b6d4' : '#a855f7';
-        ctx.shadowColor = ctx.fillStyle;
-        ctx.shadowBlur = 20 * boostPulse;
+        const p = 0.6 + 0.4 * Math.sin(t / 120);
+        ctx.shadowColor = remaining ? '#00f0ff' : '#0099aa';
+        ctx.shadowBlur = 25 * p;
+        ctx.fillStyle = remaining ? '#00f0ff' : '#0099aa';
+
         ctx.beginPath();
-        ctx.arc(
-          powerUp.x * CELL + CELL / 2,
-          powerUp.y * CELL + CELL / 2,
-          CELL / 2 - 2, 0, Math.PI * 2
-        );
+        ctx.arc(powerUp.x * CELL + CELL / 2, powerUp.y * CELL + CELL / 2, CELL / 2 - 3, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 0;
 
         ctx.fillStyle = '#fff';
-        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.font = 'bold 12px Orbitron, monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('»', powerUp.x * CELL + CELL / 2, powerUp.y * CELL + CELL / 2 + 4);
-        ctx.textAlign = 'left';
-      }
-
-      if (gameOver) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#ef4444';
-        ctx.font = '24px "Press Start 2P", monospace';
-        ctx.textAlign = 'center';
-        ctx.shadowColor = '#ef4444';
-        ctx.shadowBlur = 20;
-        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
-
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = '14px "Press Start 2P", monospace';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('»', powerUp.x * CELL + CELL / 2, powerUp.y * CELL + CELL / 2 + 1);
         ctx.shadowBlur = 0;
-        ctx.fillText(`SCORE: ${score}`, canvas.width / 2, canvas.height / 2);
-
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '10px "Press Start 2P", monospace';
-        ctx.fillText('SPACE / ENTER TO RESTART', canvas.width / 2, canvas.height / 2 + 40);
       }
 
-      if (Date.now() < speedBoostUntil) {
-        const left = Math.ceil((speedBoostUntil - Date.now()) / 1000);
-        boostEl.textContent = `⚡ BOOST: ${left}s`;
+      if (superPowerUp) {
+        const remaining = superBoostUntil > t;
+        const p = 0.6 + 0.4 * Math.sin(t / 100);
+        ctx.shadowColor = remaining ? '#b300ff' : '#7700aa';
+        ctx.shadowBlur = 30 * p;
+        ctx.fillStyle = remaining ? '#b300ff' : '#7700aa';
+
+        ctx.beginPath();
+        ctx.arc(superPowerUp.x * CELL + CELL / 2, superPowerUp.y * CELL + CELL / 2, CELL / 2 - 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(superPowerUp.x * CELL + CELL / 2, superPowerUp.y * CELL + CELL / 2, CELL / 2 - 6, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 10px Orbitron, monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('★', superPowerUp.x * CELL + CELL / 2, superPowerUp.y * CELL + CELL / 2 + 1);
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function drawBoostIndicator() {
+      const t = Date.now();
+      const isSuperBoost = superBoostUntil > t;
+      const isSpeedBoost = speedBoostUntil > t;
+
+      if (isSuperBoost) {
+        boostTextEl.textContent = '★ SUPER TURBO ACTIVE ★';
+        boostTextEl.style.color = '#b300ff';
+        boostTextEl.style.textShadow = '0 0 20px #b300ff';
+        boostTextEl.classList.add('active');
+      } else if (isSpeedBoost) {
+        const left = Math.ceil((speedBoostUntil - t) / 1000);
+        boostTextEl.textContent = `⚡ TURBO: ${left}s`;
+        boostTextEl.style.color = '#00f0ff';
+        boostTextEl.style.textShadow = '0 0 20px #00f0ff';
+        boostTextEl.classList.add('active');
       } else {
-        boostEl.textContent = '';
+        boostTextEl.classList.remove('active');
       }
+    }
+
+    function draw() {
+      ctx.fillStyle = '#0a0a12';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      drawGrid();
+      drawFood();
+      drawPowerUps();
+      drawSnake();
+      drawBoostIndicator();
     }
 
     function update() {
@@ -234,25 +765,31 @@
 
       const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
+      trailSegments.unshift({ x: snake[0].x, y: snake[0].y });
+      if (trailSegments.length > 8) trailSegments.pop();
+
       if (head.x < 0 || head.x >= GRID || head.y < 0 || head.y >= GRID) {
-        gameOver = true;
-        draw();
+        triggerGameOver();
         return;
       }
 
-      if (snake.some(s => s.x === head.x && s.y === head.y)) {
-        gameOver = true;
-        draw();
+      if (snake.some((s, i) => i > 0 && s.x === head.x && s.y === head.y)) {
+        triggerGameOver();
         return;
       }
 
       snake.unshift(head);
 
       if (head.x === food.x && head.y === food.y) {
+        const rect = canvas.getBoundingClientRect();
+        createParticles(rect.left + head.x * CELL + CELL / 2, rect.top + head.y * CELL + CELL / 2, '#ff0066', 16);
         score += 10;
         updateScore();
+        updateLevel();
+        pulseScore();
         spawnFood();
-        spawnPowerUp();
+        spawnPowerUp('speed');
+        if (Math.random() > 0.7) spawnPowerUp('super');
       } else {
         snake.pop();
       }
@@ -260,25 +797,60 @@
       if (powerUp && head.x === powerUp.x && head.y === powerUp.y) {
         speedBoostUntil = Date.now() + BOOST_DURATION;
         powerUp = null;
+        screenShake();
+        const rect = canvas.getBoundingClientRect();
+        createParticles(rect.left + head.x * CELL + CELL / 2, rect.top + head.y * CELL + CELL / 2, '#00f0ff', 20);
+      }
+
+      if (superPowerUp && head.x === superPowerUp.x && head.y === superPowerUp.y) {
+        superBoostUntil = Date.now() + SUPER_BOOST_DURATION;
+        speedBoostUntil = Math.max(speedBoostUntil, Date.now() + SUPER_BOOST_DURATION);
+        superPowerUp = null;
+        screenShake();
+        const rect = canvas.getBoundingClientRect();
+        createParticles(rect.left + head.x * CELL + CELL / 2, rect.top + head.y * CELL + CELL / 2, '#b300ff', 24);
       }
     }
 
-    function getSpeed() {
-      return Date.now() < speedBoostUntil ? BOOST_SPEED : NORMAL_SPEED;
+    function triggerGameOver() {
+      gameOver = true;
+      screenShake();
+      const rect = canvas.getBoundingClientRect();
+      createParticles(rect.left + snake[0].x * CELL + CELL / 2, rect.top + snake[0].y * CELL + CELL / 2, '#ff0066', 30);
+
+      finalScoreEl.textContent = `SCORE: ${score}`;
+      if (score >= highScore && score > 0) {
+        highScoreTextEl.textContent = '★ NEW HIGH SCORE ★';
+        highScoreTextEl.style.color = '#ffee00';
+      } else {
+        highScoreTextEl.textContent = `BEST: ${highScore}`;
+        highScoreTextEl.style.color = '#b300ff';
+      }
+      gameOverlay.classList.add('active');
     }
 
-    function gameLoop() {
-      update();
+    function getSpeed() {
+      const t = Date.now();
+      if (superBoostUntil > t) return SUPER_BOOST_SPEED;
+      if (speedBoostUntil > t) return BOOST_SPEED;
+      return NORMAL_SPEED;
+    }
+
+    function gameLoop(timestamp) {
+      if (timestamp - lastRenderTime >= getSpeed()) {
+        update();
+        lastRenderTime = timestamp;
+      }
       draw();
-      animFrame = setTimeout(gameLoop, getSpeed());
+      animFrame = requestAnimationFrame(gameLoop);
     }
 
     document.addEventListener('keydown', e => {
       if (gameOver) {
         if (e.key === ' ' || e.key === 'Enter') {
-          clearTimeout(animFrame);
+          cancelAnimationFrame(animFrame);
           init();
-          gameLoop();
+          animFrame = requestAnimationFrame(gameLoop);
         }
         return;
       }
@@ -286,17 +858,21 @@
       const key = e.key;
       if (key === 'ArrowUp' && direction.y !== 1) {
         direction = { x: 0, y: -1 };
+        e.preventDefault();
       } else if (key === 'ArrowDown' && direction.y !== -1) {
         direction = { x: 0, y: 1 };
+        e.preventDefault();
       } else if (key === 'ArrowLeft' && direction.x !== 1) {
         direction = { x: -1, y: 0 };
+        e.preventDefault();
       } else if (key === 'ArrowRight' && direction.x !== -1) {
         direction = { x: 1, y: 0 };
+        e.preventDefault();
       }
     });
 
     init();
-    gameLoop();
+    animFrame = requestAnimationFrame(gameLoop);
   </script>
 </body>
 </html>
