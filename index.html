@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>股票的基本涨跌知识 - 可录制版</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0a;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 录制控制栏 */
+    .record-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(0, 212, 170, 0.5);
+      border-radius: 50px;
+      z-index: 1000;
+    }
+
+    .record-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .record-btn.start {
+      background: #FF4757;
+      color: white;
+    }
+
+    .record-btn.start:hover {
+      background: #ff6b7a;
+    }
+
+    .record-btn.stop {
+      background: #00D4AA;
+      color: white;
+    }
+
+    .record-btn.stop:hover {
+      background: #00e6b8;
+    }
+
+    .record-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-text {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      min-width: 120px;
+    }
+
+    .status-text.recording {
+      color: #FF4757;
+    }
+
+    .timer {
+      font-family: 'Space Mono', monospace;
+      color: #FF4757;
+      font-size: 14px;
+    }
+
+    /* 场景 */
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 网格背景 */
+    .grid-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 212, 170, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 170, 0.2) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .grid-line-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00D4AA, transparent);
+      z-index: 1;
+    }
+
+    /* 通用标签 */
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      color: #00D4AA;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .tag-red {
+      color: #FF4757;
+    }
+
+    /* ========== 场景1: 标题 + 涨跌原理 ========== */
+    .scene1-content {
+      position: relative;
+      z-index: 10;
+      padding: 60px 100px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .main-title {
+      font-size: 88px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    .main-title .accent {
+      color: #00D4AA;
+    }
+
+    .subtitle {
+      font-size: 28px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 20px;
+    }
+
+    /* 涨跌原理三卡片 */
+    .principle-section {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .principle-card {
+      flex: 1;
+      background: rgba(26, 58, 74, 0.5);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 12px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .principle-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .principle-icon.up {
+      background: rgba(0, 212, 170, 0.2);
+      border: 2px solid #00D4AA;
+    }
+
+    .principle-icon.down {
+      background: rgba(255, 71, 87, 0.2);
+      border: 2px solid #FF4757;
+    }
+
+    .principle-icon.flat {
+      background: rgba(255, 217, 61, 0.2);
+      border: 2px solid #FFD93D;
+    }
+
+    .principle-text h4 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .principle-text p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* ========== 场景2: K线详解 ========== */
+    .scene2-content {
+      position: relative;
+      z-index: 10;
+      padding: 60px 100px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kline-section {
+      display: flex;
+      gap: 80px;
+      flex: 1;
+      align-items: center;
+    }
+
+    .kline-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .kline-visual {
+      width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .kline-shadow-top {
+      width: 3px;
+      height: 40px;
+    }
+
+    .kline-body {
+      width: 70px;
+      height: 140px;
+      border-radius: 6px;
+    }
+
+    .kline-shadow-bottom {
+      width: 3px;
+      height: 40px;
+    }
+
+    .kline-item.up .kline-shadow-top,
+    .kline-item.up .kline-shadow-bottom {
+      background: #00D4AA;
+    }
+
+    .kline-item.up .kline-body {
+      background: #00D4AA;
+    }
+
+    .kline-item.down .kline-shadow-top,
+    .kline-item.down .kline-shadow-bottom {
+      background: #FF4757;
+    }
+
+    .kline-item.down .kline-body {
+      background: #FF4757;
+    }
+
+    .kline-name {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* 四指标面板 */
+    .indicators-panel {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .indicator-card {
+      background: rgba(26, 58, 74, 0.5);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .indicator-card h4 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #00D4AA;
+      margin-bottom: 12px;
+    }
+
+    .indicator-card p {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .indicator-card .highlight {
+      color: #00D4AA;
+      font-weight: 600;
+    }
+
+    .indicator-card .highlight-red {
+      color: #FF4757;
+      font-weight: 600;
+    }
+
+    /* ========== 场景3: 量价 + 风险 ========== */
+    .scene3-content {
+      position: relative;
+      z-index: 10;
+      padding: 60px 100px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .volume-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .volume-card {
+      background: rgba(26, 58, 74, 0.5);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .volume-card h4 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .volume-card ul {
+      list-style: none;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+    }
+
+    .volume-card li::before {
+      content: '•';
+      color: #00D4AA;
+      margin-right: 10px;
+    }
+
+    /* 风险提示 */
+    .risk-section {
+      background: rgba(255, 71, 87, 0.1);
+      border: 2px solid #FF4757;
+      border-radius: 16px;
+      padding: 32px 48px;
+      text-align: center;
+    }
+
+    .risk-section h3 {
+      font-size: 42px;
+      font-weight: 700;
+      color: #FF4757;
+      margin-bottom: 16px;
+    }
+
+    .risk-tips {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .risk-tip {
+      font-size: 20px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .risk-tip span {
+      color: #00D4AA;
+    }
+
+    /* 装饰 */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.08;
+      z-index: 0;
+    }
+
+    .deco-circle-1 {
+      width: 600px;
+      height: 600px;
+      background: #00D4AA;
+      top: -200px;
+      right: -150px;
+    }
+
+    .deco-circle-2 {
+      width: 400px;
+      height: 400px;
+      background: #FF4757;
+      bottom: -100px;
+      left: -100px;
+    }
+
+    /* 时间标签 */
+    .time-badge {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      color: rgba(0, 212, 170, 0.5);
+      z-index: 100;
+    }
+
+    /* 进度条 */
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00D4AA, #FF4757);
+      z-index: 100;
+      width: 0%;
+    }
+
+    /* 底部提示 */
+    .footer-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 录制控制栏 -->
+    <div class="record-bar">
+      <button id="recordBtn" class="record-btn start" onclick="toggleRecording()">
+        🔴 开始录制
+      </button>
+      <button id="downloadBtn" class="record-btn stop" onclick="downloadVideo()" disabled>
+        ⬇️ 下载视频
+      </button>
+      <span id="statusText" class="status-text">点击开始录制</span>
+      <span id="timer" class="timer"></span>
+    </div>
+
+    <!-- 场景1: 标题 + 涨跌原理 -->
+    <div id="scene1" class="scene">
+      <div class="grid-bg"></div>
+      <div class="grid-line-top"></div>
+      <div class="deco-circle deco-circle-1"></div>
+      <div class="deco-circle deco-circle-2"></div>
+      <div class="time-badge">10s</div>
+
+      <div class="scene1-content">
+        <div class="tag">第一课 · 股票基础</div>
+
+        <div class="title-section">
+          <h1 class="main-title">股票的基本<br><span class="accent">涨跌知识</span></h1>
+          <p class="subtitle">理解市场规律，掌握投资基础</p>
+        </div>
+
+        <div class="principle-section">
+          <div class="principle-card">
+            <div class="principle-icon up">📈</div>
+            <div class="principle-text">
+              <h4>买盘 > 卖盘</h4>
+              <p>股价上涨，供不应求</p>
+            </div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-icon down">📉</div>
+            <div class="principle-text">
+              <h4>买盘 < 卖盘</h4>
+              <p>股价下跌，供过于求</p>
+            </div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-icon flat">➖</div>
+            <div class="principle-text">
+              <h4>买卖均衡</h4>
+              <p>股价横盘，观望为主</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 场景2: K线 + 四大指标 -->
+    <div id="scene2" class="scene">
+      <div class="grid-bg"></div>
+      <div class="grid-line-top"></div>
+      <div class="time-badge">7s</div>
+
+      <div class="scene2-content">
+        <div class="tag">第二课 · 技术分析</div>
+
+        <div class="kline-section">
+          <!-- K线展示 -->
+          <div class="kline-display">
+            <div style="display: flex; gap: 60px; align-items: flex-end;">
+              <div class="kline-item up">
+                <div class="kline-visual">
+                  <div class="kline-shadow-top"></div>
+                  <div class="kline-body"></div>
+                  <div class="kline-shadow-bottom"></div>
+                </div>
+                <span class="kline-name">阳线</span>
+              </div>
+              <div class="kline-item down">
+                <div class="kline-visual">
+                  <div class="kline-shadow-top"></div>
+                  <div class="kline-body"></div>
+                  <div class="kline-shadow-bottom"></div>
+                </div>
+                <span class="kline-name">阴线</span>
+              </div>
+            </div>
+            <p style="font-size: 18px; color: rgba(255,255,255,0.5); text-align: center; max-width: 300px; line-height: 1.6;">
+              K线由开盘价、收盘价、最高价、最低价四个价格组成
+            </p>
+          </div>
+
+          <!-- 四大指标 -->
+          <div class="indicators-panel">
+            <div class="indicator-card">
+              <h4>MA 均线</h4>
+              <p>
+                趋势判断神器<br>
+                <span class="highlight">金叉买入</span>：短上穿长<br>
+                <span class="highlight-red">死叉卖出</span>：短下穿长
+              </p>
+            </div>
+            <div class="indicator-card">
+              <h4>MACD</h4>
+              <p>
+                趋势研判指标<br>
+                <span class="highlight">零轴上方</span>：牛市格局<br>
+                顶背离预警：警惕回落
+              </p>
+            </div>
+            <div class="indicator-card">
+              <h4>KDJ</h4>
+              <p>
+                超买超卖判断<br>
+                <span class="highlight-red">>80超买</span>：注意回调<br>
+                <span class="highlight"><20超卖</span>：关注反弹
+              </p>
+            </div>
+            <div class="indicator-card">
+              <h4>布林带</h4>
+              <p>
+                压力支撑判断<br>
+                上轨<span class="highlight-red">压力位</span><br>
+                下轨<span class="highlight">支撑位</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 场景3: 量价关系 + 风险提示 -->
+    <div id="scene3" class="scene">
+      <div class="grid-bg"></div>
+      <div class="grid-line-top"></div>
+      <div class="deco-circle deco-circle-1"></div>
+      <div class="time-badge">4s</div>
+
+      <div class="scene3-content">
+        <div class="tag">第三课 · 量价与风险</div>
+
+        <div class="volume-section">
+          <div class="volume-card">
+            <h4>📈 量价配合 <span class="tag" style="font-size: 12px;">量为价先</span></h4>
+            <ul>
+              <li>放量上涨：资金涌入，看多信号</li>
+              <li>缩量上涨：动能不足，警惕回调</li>
+              <li>放量下跌：恐慌抛售，可能见底</li>
+              <li>缩量下跌：抛压减轻，底部信号</li>
+            </ul>
+          </div>
+          <div class="volume-card">
+            <h4>📊 基本面核心指标</h4>
+            <ul>
+              <li>PE（市盈率）<20：估值合理</li>
+              <li>PB（市净率）<1：破净机会</li>
+              <li>净利润增长>20%：高成长性</li>
+              <li>ROE>15%：盈利能力优秀</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="risk-section">
+          <h3>⚠️ 投资有风险，入市需谨慎</h3>
+          <div class="risk-tips">
+            <div class="risk-tip">止损 <span>7-10%</span></div>
+            <div class="risk-tip">分散投资</div>
+            <div class="risk-tip">永 <span>不</span> 满仓</div>
+            <div class="risk-tip">不 <span>追涨杀跌</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-bar" id="progress"></div>
+    <div class="footer-hint">动画循环播放中...</div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const TOTAL_DURATION = 10;
+    const SCENE_COUNT = 3;
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let timerInterval = null;
+    let recordingTime = 0;
+    let recordedBlob = null;
+
+    // 初始状态
+    gsap.set('#scene1', { opacity: 1 });
+
+    // 动画序列
+    function runAnimation() {
+      const tl = gsap.timeline({ onComplete: () => {
+        gsap.to('#scene3', { opacity: 0, duration: 0.5 });
+        gsap.to('#scene1', { opacity: 1, duration: 0.5, delay: 0.5, onComplete: runAnimation });
+      }});
+
+      // 场景1动画
+      tl.from('#scene1 .tag', { y: 20, opacity: 0, duration: 0.4 })
+        .from('#scene1 .main-title', { y: 40, opacity: 0, duration: 0.6 }, '-=0.2')
+        .from('#scene1 .subtitle', { y: 20, opacity: 0, duration: 0.4 }, '-=0.2')
+        .from('#scene1 .principle-card', { y: 30, opacity: 0, duration: 0.4, stagger: 0.12 }, '-=0.1')
+        .from('#scene1 .deco-circle', { scale: 0, opacity: 0, duration: 0.6 }, '-=0.3');
+
+      // 切换到场景2
+      tl.to('#scene1', { opacity: 0, duration: 0.4 }, '+=0.5')
+        .to('#scene2', { opacity: 1, duration: 0.4 }, '-=0.1');
+
+      // 场景2动画
+      tl.from('#scene2 .tag', { y: 20, opacity: 0, duration: 0.4 })
+        .from('#scene2 .kline-item', { scale: 0, opacity: 0, duration: 0.5, stagger: 0.15 })
+        .from('#scene2 .indicators-panel', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
+        .from('#scene2 .indicator-card', { y: 20, opacity: 0, duration: 0.4, stagger: 0.1 }, '-=0.2');
+
+      // 切换到场景3
+      tl.to('#scene2', { opacity: 0, duration: 0.4 }, '+=0.5')
+        .to('#scene3', { opacity: 1, duration: 0.4 }, '-=0.1');
+
+      // 场景3动画
+      tl.from('#scene3 .tag', { y: 20, opacity: 0, duration: 0.4 })
+        .from('#scene3 .volume-card', { y: 30, opacity: 0, duration: 0.5, stagger: 0.15 })
+        .from('#scene3 .risk-section', { scale: 0.9, opacity: 0, duration: 0.5 }, '-=0.2')
+        .from('#scene3 .risk-tip', { y: 10, opacity: 0, duration: 0.3, stagger: 0.08 }, '-=0.2');
+    }
+
+    // 进度条
+    gsap.to('#progress', {
+      width: '100%',
+      duration: TOTAL_DURATION,
+      ease: 'none',
+      repeat: -1
+    });
+
+    // 装饰动画
+    gsap.to('.deco-circle', {
+      scale: 1.1,
+      opacity: 0.12,
+      duration: 2.5,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1
+    });
+
+    // 启动
+    runAnimation();
+
+    // 录制功能
+    function toggleRecording() {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    }
+
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { cursor: 'always' },
+          audio: false
+        });
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp9'
+        });
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            recordedChunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(recordedBlob);
+
+          const downloadBtn = document.getElementById('downloadBtn');
+          downloadBtn.disabled = false;
+          downloadBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stock-video.webm';
+            a.click();
+          };
+
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+
+        const recordBtn = document.getElementById('recordBtn');
+        recordBtn.textContent = '⏹️ 停止录制';
+        recordBtn.classList.remove('start');
+        recordBtn.classList.add('stop');
+
+        const statusText = document.getElementById('statusText');
+        statusText.textContent = '正在录制...';
+        statusText.classList.add('recording');
+
+        // 定时器
+        recordingTime = 0;
+        timerInterval = setInterval(() => {
+          recordingTime++;
+          const mins = Math.floor(recordingTime / 60).toString().padStart(2, '0');
+          const secs = (recordingTime % 60).toString().padStart(2, '0');
+          document.getElementById('timer').textContent = `${mins}:${secs}`;
+        }, 1000);
+
+      } catch (err) {
+        console.error('录制失败:', err);
+        alert('无法开始录制，请刷新页面重试');
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+
+      isRecording = false;
+
+      const recordBtn = document.getElementById('recordBtn');
+      recordBtn.textContent = '🔴 开始录制';
+      recordBtn.classList.remove('stop');
+      recordBtn.classList.add('start');
+
+      const statusText = document.getElementById('statusText');
+      statusText.textContent = '录制完成，点击下载';
+      statusText.classList.remove('recording');
+
+      clearInterval(timerInterval);
+    }
+  </script>
+</body>
+</html>
