@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>股票的基本涨跌知识 - 可录制版</title>
+  <title>股票的基本涨跌知识</title>
   <style>
     * {
       margin: 0;
@@ -56,17 +56,9 @@
       color: white;
     }
 
-    .record-btn.start:hover {
-      background: #ff6b7a;
-    }
-
     .record-btn.stop {
       background: #00D4AA;
       color: white;
-    }
-
-    .record-btn.stop:hover {
-      background: #00e6b8;
     }
 
     .record-btn:disabled {
@@ -145,7 +137,7 @@
       color: #FF4757;
     }
 
-    /* ========== 场景1: 标题 + 涨跌原理 ========== */
+    /* ========== 场景1: 标题 + 涨跌原理 (0-3.5s) ========== */
     .scene1-content {
       position: relative;
       z-index: 10;
@@ -235,7 +227,7 @@
       color: rgba(255, 255, 255, 0.6);
     }
 
-    /* ========== 场景2: K线详解 ========== */
+    /* ========== 场景2: K线详解 (3.5-7s) ========== */
     .scene2-content {
       position: relative;
       z-index: 10;
@@ -344,7 +336,7 @@
       font-weight: 600;
     }
 
-    /* ========== 场景3: 量价 + 风险 ========== */
+    /* ========== 场景3: 量价 + 风险 (7-10s) ========== */
     .scene3-content {
       position: relative;
       z-index: 10;
@@ -664,12 +656,6 @@
   <script>
     const TOTAL_DURATION = 10;
     const SCENE_COUNT = 3;
-    let isRecording = false;
-    let mediaRecorder = null;
-    let recordedChunks = [];
-    let timerInterval = null;
-    let recordingTime = 0;
-    let recordedBlob = null;
 
     // 初始状态
     gsap.set('#scene1', { opacity: 1 });
@@ -677,11 +663,12 @@
     // 动画序列
     function runAnimation() {
       const tl = gsap.timeline({ onComplete: () => {
+        // 回到第一个场景重播
         gsap.to('#scene3', { opacity: 0, duration: 0.5 });
         gsap.to('#scene1', { opacity: 1, duration: 0.5, delay: 0.5, onComplete: runAnimation });
       }});
 
-      // 场景1动画
+      // ========== 场景1动画 (0-3.5s) ==========
       tl.from('#scene1 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene1 .main-title', { y: 40, opacity: 0, duration: 0.6 }, '-=0.2')
         .from('#scene1 .subtitle', { y: 20, opacity: 0, duration: 0.4 }, '-=0.2')
@@ -692,7 +679,7 @@
       tl.to('#scene1', { opacity: 0, duration: 0.4 }, '+=0.5')
         .to('#scene2', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-      // 场景2动画
+      // ========== 场景2动画 (3.5-7s) ==========
       tl.from('#scene2 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene2 .kline-item', { scale: 0, opacity: 0, duration: 0.5, stagger: 0.15 })
         .from('#scene2 .indicators-panel', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
@@ -702,7 +689,7 @@
       tl.to('#scene2', { opacity: 0, duration: 0.4 }, '+=0.5')
         .to('#scene3', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-      // 场景3动画
+      // ========== 场景3动画 (7-10s) ==========
       tl.from('#scene3 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene3 .volume-card', { y: 30, opacity: 0, duration: 0.5, stagger: 0.15 })
         .from('#scene3 .risk-section', { scale: 0.9, opacity: 0, duration: 0.5 }, '-=0.2')
@@ -731,6 +718,13 @@
     runAnimation();
 
     // 录制功能
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let timerInterval = null;
+    let recordingTime = 0;
+    let recordedBlob = null;
+
     function toggleRecording() {
       if (!isRecording) {
         startRecording();
@@ -786,7 +780,6 @@
         statusText.textContent = '正在录制...';
         statusText.classList.add('recording');
 
-        // 定时器
         recordingTime = 0;
         timerInterval = setInterval(() => {
           recordingTime++;
