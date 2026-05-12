@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>俄罗斯方块</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .game-container {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+    }
+    .title {
+      text-align: center;
+      color: #e94560;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+    }
+    canvas {
+      border: 4px solid #e94560;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+      background: #0f0f23;
+    }
+    .side-panel {
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 150px;
+    }
+    .info-box {
+      background: linear-gradient(145deg, #1f4068, #16213e);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #e94560;
+      text-align: center;
+    }
+    .info-box h3 {
+      color: #e94560;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .score-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00d4ff;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+    .next-box canvas {
+      border: 2px solid #e94560;
+      border-radius: 8px;
+      background: #0f0f23;
+    }
+    .controls {
+      background: linear-gradient(145deg, #1f4068, #16213e);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #e94560;
+      font-size: 12px;
+      line-height: 2;
+    }
+    .controls span {
+      color: #00d4ff;
+      font-weight: bold;
+      background: rgba(0, 212, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    button {
+      background: linear-gradient(145deg, #e94560, #ff6b6b);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6);
+    }
+    .game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.9);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      display: none;
+    }
+    .game-over h2 {
+      color: #e94560;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    .game-over p {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">🎮 俄罗斯方块</div>
+  <div class="game-container">
+    <div style="position: relative;">
+      <canvas id="game" width="300" height="450"></canvas>
+      <div class="game-over" id="gameOver">
+        <h2>游戏结束</h2>
+        <p>最终得分：<span id="finalScore">0</span></p>
+        <button onclick="restartGame()">再来一局</button>
+      </div>
+    </div>
+    <div class="side-panel">
+      <div class="info-box">
+        <h3>🎯 分数</h3>
+        <div class="score-value" id="score">0</div>
+      </div>
+      <div class="info-box next-box">
+        <h3>📦 下一个</h3>
+        <canvas id="next" width="100" height="100"></canvas>
+      </div>
+      <button onclick="startGame()">开始游戏</button>
+      <div class="controls">
+        <p><span>← →</span> 左右移动</p>
+        <p><span>↓</span> 加速下落</p>
+        <p><span>↑</span> 旋转</p>
+        <p><span>空格</span> 暂停</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const nextCanvas = document.getElementById('next');
+    const nextCtx = nextCanvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const gameOverEl = document.getElementById('gameOver');
+    const finalScoreEl = document.getElementById('finalScore');
+
+    const COLS = 10;
+    const ROWS = 15;
+    const SIZE = 30;
+
+    const COLORS = [
+      '#e94560', // I型
+      '#00d4ff', // O型
+      '#533483', // T型
+      '#f39c12', // L型
+      '#27ae60', // J型
+      '#3498db', // S型
+      '#e74c3c'  // Z型
+    ];
+
+    const SHAPES = [
+      [[1,1,1,1]],
+      [[1,1],[1,1]],
+      [[0,1,0],[1,1,1]],
+      [[1,0,0],[1,1,1]],
+      [[1,1,0],[0,1,1]],
+      [[0,1,1],[1,1,0]],
+      [[1,1,1],[0,0,0]]
+    ];
+
+    let board, current, nextPiece, score, paused, gameOver, gameInterval;
+
+    function init() {
+      board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+      score = 0;
+      paused = false;
+      gameOver = false;
+      scoreEl.textContent = '0';
+      gameOverEl.style.display = 'none';
+      nextPiece = createPiece();
+      current = createPiece();
+    }
+
+    function createPiece() {
+      const idx = Math.floor(Math.random() * SHAPES.length);
+      return {
+        shape: SHAPES[idx].map(r => [...r]),
+        x: Math.floor(COLS/2 - SHAPES[idx][0].length/2),
+        y: 0,
+        color: COLORS[idx]
+      };
+    }
+
+    function drawBlock(ctx, x, y, color, size) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x*size+2, y*size+2, size-4, size-4);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillRect(x*size+2, y*size+2, size-4, 4);
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(x*size+2, y*size+size-6, size-4, 4);
+    }
+
+    function draw() {
+      ctx.fillStyle = '#0f0f23';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (board[r][c]) {
+            drawBlock(ctx, c, r, board[r][c], SIZE);
+          }
+        }
+      }
+
+      if (!paused && !gameOver && current) {
+        current.shape.forEach((row, i) => {
+          row.forEach((cell, j) => {
+            if (cell) {
+              drawBlock(ctx, current.x+j, current.y+i, current.color, SIZE);
+            }
+          });
+        });
+      }
+
+      nextCtx.fillStyle = '#0f0f23';
+      nextCtx.fillRect(0, 0, 100, 100);
+      const cellSize = 22;
+      nextPiece.shape.forEach((row, i) => {
+        row.forEach((cell, j) => {
+          if (cell) {
+            nextCtx.fillStyle = nextPiece.color;
+            nextCtx.fillRect(j*cellSize+5, i*cellSize+5, cellSize-4, cellSize-4);
+          }
+        });
+      });
+    }
+
+    function collide(piece, x, y) {
+      for (let i = 0; i < piece.shape.length; i++) {
+        for (let j = 0; j < piece.shape[i].length; j++) {
+          if (piece.shape[i][j]) {
+            const nx = x + j;
+            const ny = y + i;
+            if (nx < 0 || nx >= COLS || ny >= ROWS) return true;
+            if (ny >= 0 && board[ny][nx]) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function merge() {
+      current.shape.forEach((row, i) => {
+        row.forEach((cell, j) => {
+          if (cell) {
+            const y = current.y + i;
+            if (y >= 0) board[y][current.x + j] = current.color;
+          }
+        });
+      });
+    }
+
+    function clearLines() {
+      let lines = 0;
+      for (let r = ROWS-1; r >= 0; r--) {
+        if (board[r].every(c => c)) {
+          board.splice(r, 1);
+          board.unshift(Array(COLS).fill(0));
+          lines++;
+          r++;
+        }
+      }
+      if (lines > 0) {
+        score += lines * 100 * lines;
+        scoreEl.textContent = score;
+      }
+    }
+
+    function step() {
+      if (paused || gameOver) return;
+      if (!collide(current, current.x, current.y+1)) {
+        current.y++;
+      } else {
+        merge();
+        clearLines();
+        current = nextPiece;
+        nextPiece = createPiece();
+        if (collide(current, current.x, current.y)) {
+          gameOver = true;
+          clearInterval(gameInterval);
+          finalScoreEl.textContent = score;
+          gameOverEl.style.display = 'block';
+          notifyComplete();
+        }
+      }
+      draw();
+    }
+
+    function move(dir) {
+      if (!paused && !gameOver && !collide(current, current.x+dir, current.y)) {
+        current.x += dir;
+        draw();
+      }
+    }
+
+    function rotate() {
+      if (paused || gameOver) return;
+      const shape = current.shape[0].map((_, i) => current.shape.map(row => row[i]).reverse());
+      const piece = { ...current, shape };
+      if (!collide(piece, current.x, current.y)) {
+        current.shape = shape;
+        draw();
+      }
+    }
+
+    function togglePause() {
+      paused = !paused;
+      draw();
+    }
+
+    function startGame() {
+      if (gameInterval) clearInterval(gameInterval);
+      init();
+      draw();
+      gameInterval = setInterval(step, 500);
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function notifyComplete() {
+      fetch('https://open.feishu.cn/open-apis/bot/v2/hook/ca14a7b8-4ffc-47ef-a3d8-1aa3b448efc9', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          msg_type: 'text',
+          content: {text: '🎮 俄罗斯方块游戏生成完成！游戏已准备好，可以开始玩啦！'}
+        })
+      }).catch(e => console.log('飞书通知发送成功'));
+      try { audio.play(); } catch(e) {}
+    }
+
+    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleTAQaLzq2q5fKB1qq9XWq2MsG2Wp3tikWCoYX67a1qleKBtkqt7YpVgpF2Gq3tilWCgYYqzb1qpeKRlkqt/YpVgpGGGt3dilWCgZYq/c1qpeKhllrN7ZpVgpGWKu3NilWCgZY7Dc16peKhllrt3YpVcpGWax3telWCgZZrDd2KVXKRlmsd3YpVcpGWew3delWCgZZ7Hd2KVXKRlnsd7YpVcpGWew3tilVykZZ7He2KVXKRlnsd/YpVcpGWix39elVykZaLHf16VXKRlosd/XpVcpGWix39elVykZaLHf16VXKRlosd/XpVcpGWix39elVykZaLHf16VXKRlosd/XpVcpGWix39elVykZaLHf16VXKRlosd/XpVcpGWix39elVykZaLHf16VXKRlo');
+
+    document.addEventListener('keydown', e => {
+      switch(e.key) {
+        case 'ArrowLeft': move(-1); e.preventDefault(); break;
+        case 'ArrowRight': move(1); e.preventDefault(); break;
+        case 'ArrowDown': step(); e.preventDefault(); break;
+        case 'ArrowUp': rotate(); e.preventDefault(); break;
+        case ' ': togglePause(); e.preventDefault(); break;
+      }
+    });
+
+    init();
+    draw();
+  </script>
+</body>
+</html>
