@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>股票的基本涨跌知识</title>
+  <title>股票的基本涨跌知识 - 可录制版</title>
   <style>
     * {
       margin: 0;
@@ -23,6 +23,63 @@
       position: relative;
       width: 100%;
       height: 100%;
+    }
+
+    /* 录制控制栏 */
+    .record-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(0, 212, 170, 0.5);
+      border-radius: 50px;
+      z-index: 1000;
+    }
+
+    .record-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .record-btn.start {
+      background: #FF4757;
+      color: white;
+    }
+
+    .record-btn.stop {
+      background: #00D4AA;
+      color: white;
+    }
+
+    .record-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-text {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      min-width: 120px;
+    }
+
+    .status-text.recording {
+      color: #FF4757;
+    }
+
+    .timer {
+      font-family: 'Space Mono', monospace;
+      color: #FF4757;
+      font-size: 14px;
     }
 
     /* 场景 */
@@ -76,11 +133,7 @@
       letter-spacing: 3px;
     }
 
-    .tag-red {
-      color: #FF4757;
-    }
-
-    /* ========== 场景1: 标题 + 涨跌原理 (0-3.5s) ========== */
+    /* ========== 场景1: 标题 + 涨跌原理 ========== */
     .scene1-content {
       position: relative;
       z-index: 10;
@@ -170,7 +223,7 @@
       color: rgba(255, 255, 255, 0.6);
     }
 
-    /* ========== 场景2: K线详解 (3.5-7s) ========== */
+    /* ========== 场景2: K线详解 ========== */
     .scene2-content {
       position: relative;
       z-index: 10;
@@ -279,7 +332,7 @@
       font-weight: 600;
     }
 
-    /* ========== 场景3: 量价 + 风险 (7-10s) ========== */
+    /* ========== 场景3: 量价 + 风险 ========== */
     .scene3-content {
       position: relative;
       z-index: 10;
@@ -419,6 +472,18 @@
 </head>
 <body>
   <div class="container">
+    <!-- 录制控制栏 -->
+    <div class="record-bar">
+      <button id="recordBtn" class="record-btn start" onclick="toggleRecording()">
+        🔴 开始录制
+      </button>
+      <button id="downloadBtn" class="record-btn stop" onclick="downloadVideo()" disabled>
+        ⬇️ 下载视频
+      </button>
+      <span id="statusText" class="status-text">点击开始录制</span>
+      <span id="timer" class="timer"></span>
+    </div>
+
     <!-- 场景1: 标题 + 涨跌原理 -->
     <div id="scene1" class="scene">
       <div class="grid-bg"></div>
@@ -586,7 +651,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
     const TOTAL_DURATION = 10;
-    const SCENE_COUNT = 3;
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let timerInterval = null;
+    let recordingTime = 0;
+    let recordedBlob = null;
 
     // 初始状态
     gsap.set('#scene1', { opacity: 1 });
@@ -594,12 +664,11 @@
     // 动画序列
     function runAnimation() {
       const tl = gsap.timeline({ onComplete: () => {
-        // 回到第一个场景重播
         gsap.to('#scene3', { opacity: 0, duration: 0.5 });
         gsap.to('#scene1', { opacity: 1, duration: 0.5, delay: 0.5, onComplete: runAnimation });
       }});
 
-      // ========== 场景1动画 (0-3.5s) ==========
+      // 场景1动画
       tl.from('#scene1 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene1 .main-title', { y: 40, opacity: 0, duration: 0.6 }, '-=0.2')
         .from('#scene1 .subtitle', { y: 20, opacity: 0, duration: 0.4 }, '-=0.2')
@@ -610,7 +679,7 @@
       tl.to('#scene1', { opacity: 0, duration: 0.4 }, '+=0.5')
         .to('#scene2', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-      // ========== 场景2动画 (3.5-7s) ==========
+      // 场景2动画
       tl.from('#scene2 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene2 .kline-item', { scale: 0, opacity: 0, duration: 0.5, stagger: 0.15 })
         .from('#scene2 .indicators-panel', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
@@ -620,7 +689,7 @@
       tl.to('#scene2', { opacity: 0, duration: 0.4 }, '+=0.5')
         .to('#scene3', { opacity: 1, duration: 0.4 }, '-=0.1');
 
-      // ========== 场景3动画 (7-10s) ==========
+      // 场景3动画
       tl.from('#scene3 .tag', { y: 20, opacity: 0, duration: 0.4 })
         .from('#scene3 .volume-card', { y: 30, opacity: 0, duration: 0.5, stagger: 0.15 })
         .from('#scene3 .risk-section', { scale: 0.9, opacity: 0, duration: 0.5 }, '-=0.2')
@@ -647,6 +716,95 @@
 
     // 启动
     runAnimation();
+
+    // 录制功能
+    function toggleRecording() {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    }
+
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { cursor: 'always' },
+          audio: false
+        });
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp9'
+        });
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            recordedChunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(recordedBlob);
+
+          const downloadBtn = document.getElementById('downloadBtn');
+          downloadBtn.disabled = false;
+          downloadBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stock-video.webm';
+            a.click();
+          };
+
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+
+        const recordBtn = document.getElementById('recordBtn');
+        recordBtn.textContent = '⏹️ 停止录制';
+        recordBtn.classList.remove('start');
+        recordBtn.classList.add('stop');
+
+        const statusText = document.getElementById('statusText');
+        statusText.textContent = '正在录制...';
+        statusText.classList.add('recording');
+
+        recordingTime = 0;
+        timerInterval = setInterval(() => {
+          recordingTime++;
+          const mins = Math.floor(recordingTime / 60).toString().padStart(2, '0');
+          const secs = (recordingTime % 60).toString().padStart(2, '0');
+          document.getElementById('timer').textContent = `${mins}:${secs}`;
+        }, 1000);
+
+      } catch (err) {
+        console.error('录制失败:', err);
+        alert('无法开始录制，请刷新页面重试');
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+
+      isRecording = false;
+
+      const recordBtn = document.getElementById('recordBtn');
+      recordBtn.textContent = '🔴 开始录制';
+      recordBtn.classList.remove('stop');
+      recordBtn.classList.add('start');
+
+      const statusText = document.getElementById('statusText');
+      statusText.textContent = '录制完成，点击下载';
+      statusText.classList.remove('recording');
+
+      clearInterval(timerInterval);
+    }
   </script>
 </body>
 </html>
