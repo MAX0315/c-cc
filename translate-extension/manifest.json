@@ -9,7 +9,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://api.openai.com/*"
+    "https://api.minimaxi.com/*"
   ],
   "action": {
     "default_popup": "popup.html",

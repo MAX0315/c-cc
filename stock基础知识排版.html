@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票的基本涨跌知识</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            background: #fff;
+            padding: 20px;
+        }
+
+        .article-container {
+            max-width: 675px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* 大标题 - 一级标题 */
+        .article-title {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        /* 章节标题 - 二级标题 */
+        h2 {
+            font-size: 22px;
+            color: #0066cc;
+            border-left: 4px solid #0066cc;
+            padding-left: 12px;
+            margin: 30px 0 20px 0;
+            line-height: 1.4;
+        }
+
+        /* 小节标题 - 三级标题 */
+        h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+
+        /* 段落 */
+        p {
+            text-align: justify;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        /* 列表 */
+        ul, ol {
+            margin: 15px 0 20px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        ul li {
+            list-style-type: disc;
+        }
+
+        ol li {
+            list-style-type: decimal;
+        }
+
+        /* 引用块 */
+        blockquote {
+            background: #f5f5f5;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        blockquote p {
+            margin-bottom: 0;
+        }
+
+        /* 分隔线 */
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ccc, transparent);
+            margin: 40px 0;
+        }
+
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        td {
+            color: #555;
+        }
+
+        /* 代码块 */
+        pre {
+            background: #f5f5f5;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            color: #0066cc;
+        }
+
+        /* 底部信息 */
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-top: 40px;
+            padding-top: 20px;
+            line-height: 2;
+        }
+
+        /* 强调文字 */
+        strong {
+            color: #0066cc;
+            font-weight: 600;
+        }
+
+        /* 斜体 */
+        em {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <h1 class="article-title">股票的基本涨跌知识</h1>
+
+        <blockquote>💡 提示：本指南仅供学习参考，不构成投资建议。股市有风险，入市需谨慎！</blockquote>
+
+        <hr>
+
+        <h2>一、股票基础概念</h2>
+
+        <h3>什么是股票？</h3>
+        <p>股票是股份有限公司发行的所有权凭证，购买股票即成为公司的股东，享有公司盈利分红和重大决策投票权。</p>
+
+        <p><strong>核心要点：</strong></p>
+        <ul>
+            <li>股票代表公司净资产的所有权份额</li>
+            <li>股价短期由市场供求决定，长期由公司基本面决定</li>
+            <li>中国A股市场主要有上海证券交易所和深圳证券交易所</li>
+        </ul>
+
+        <hr>
+
+        <h2>二、股票涨跌原理</h2>
+
+        <h3>2.1 基本供需关系</h3>
+
+        <table>
+            <tr>
+                <th>情况</th>
+                <th>结果</th>
+            </tr>
+            <tr>
+                <td>买盘 > 卖盘</td>
+                <td>股价上涨 ↑</td>
+            </tr>
+            <tr>
+                <td>买盘 < 卖盘</td>
+                <td>股价下跌 ↓</td>
+            </tr>
+            <tr>
+                <td>买卖均衡</td>
+                <td>股价横盘 →</td>
+            </tr>
+        </table>
+
+        <h3>2.2 影响股价的核心因素</h3>
+
+        <p><strong>基本面因素：</strong></p>
+        <ul>
+            <li>📊 公司业绩：净利润增长 → 股价上涨</li>
+            <li>💰 盈利能力：毛利率、ROE等指标优秀 → 资金青睐</li>
+            <li>📈 行业前景：朝阳行业更受市场关注</li>
+        </ul>
+
+        <p><strong>市场面因素：</strong></p>
+        <ul>
+            <li>🌍 宏观经济：GDP增长、货币政策宽松 → 利好股市</li>
+            <li>🏛️ 政策影响：产业扶持政策 → 相关板块上涨</li>
+            <li>💭 市场情绪：投资者信心影响短期走势</li>
+            <li>💵 资金面：北向资金、杠杆资金流向</li>
+        </ul>
+
+        <hr>
+
+        <h2>三、K线图基础知识</h2>
+
+        <h3>3.1 K线的构成</h3>
+
+        <blockquote>K线起源于日本米市，又称"蜡烛图"，由四个价格组成</blockquote>
+
+        <pre>     ┌──┐
+     │  │ ← 上影线（最高价）
+ ┌───┤  ├───┐
+ │   │  │   │ ← 实体（开盘-收盘）
+ └───┤  ├───┘
+     │  │ ← 下影线（最低价）
+     └──┘</pre>
+
+        <p><strong>四个价格：</strong></p>
+        <ul>
+            <li>开盘价：集合竞价最终成交价</li>
+            <li>收盘价：交易日最后一个成交价</li>
+            <li>最高价：当日最高成交价</li>
+            <li>最低价：当日最低成交价</li>
+        </ul>
+
+        <h3>3.2 阳线与阴线</h3>
+
+        <table>
+            <tr>
+                <th>类型</th>
+                <th>颜色</th>
+                <th>条件</th>
+                <th>含义</th>
+            </tr>
+            <tr>
+                <td>阳线</td>
+                <td>红色/空心</td>
+                <td>收盘价 > 开盘价</td>
+                <td>上涨</td>
+            </tr>
+            <tr>
+                <td>阴线</td>
+                <td>绿色/实心</td>
+                <td>收盘价 < 开盘价</td>
+                <td>下跌</td>
+            </tr>
+        </table>
+
+        <h3>3.3 经典K线形态（实战重点）</h3>
+
+        <p><strong>反转形态：</strong></p>
+        <ul>
+            <li>🔨 <strong>锤子线</strong>：下影线是实体的2-3倍，出现在下跌底部 → 买入信号</li>
+            <li>⚡ <strong>上吊线</strong>：锤子线的倒置，出现在上涨顶部 → 警惕回落</li>
+            <li>⭐ <strong>吞没形态</strong>：阳包阴（买入）、阴包阳（卖出）</li>
+            <li>🔄 <strong>十字星</strong>：开盘=收盘，多空博弈平衡 → 观望信号</li>
+        </ul>
+
+        <p><strong>持续形态：</strong></p>
+        <ul>
+            <li>➡️ <strong>纺锤线</strong>：实体小、上下影线长 → 盘整信号</li>
+            <li>📦 <strong>三兵形态</strong>：红三兵（强势）、黑三兵（弱势）</li>
+        </ul>
+
+        <hr>
+
+        <h2>四、常用技术指标（重点）</h2>
+
+        <h3>4.1 均线系统（MA）—— 趋势之王</h3>
+
+        <p><strong>什么是均线？</strong></p>
+        <p>将一定周期内的收盘价加权平均，连接成曲线</p>
+
+        <table>
+            <tr>
+                <th>周期</th>
+                <th>名称</th>
+                <th>用途</th>
+            </tr>
+            <tr>
+                <td>MA5</td>
+                <td>一周均线</td>
+                <td>超短线操作参考</td>
+            </tr>
+            <tr>
+                <td>MA10</td>
+                <td>两周均线</td>
+                <td>短线趋势判断</td>
+            </tr>
+            <tr>
+                <td>MA20</td>
+                <td>一个月</td>
+                <td>中期趋势分水岭</td>
+            </tr>
+            <tr>
+                <td>MA60</td>
+                <td>一季度</td>
+                <td>长期趋势确认</td>
+            </tr>
+            <tr>
+                <td>MA120</td>
+                <td>半年线</td>
+                <td>牛熊分界线</td>
+            </tr>
+        </table>
+
+        <p><strong>均线实战用法：</strong></p>
+        <ul>
+            <li>✅ <strong>多头排列</strong>：短周期在上、长周期在下 → 强势上涨</li>
+            <li>❌ <strong>空头排列</strong>：短周期在下、长周期在上 → 强势下跌</li>
+            <li>🔀 <strong>均线金叉</strong>：短周期上穿长周期 → 买入信号</li>
+            <li>🔀 <strong>均线死叉</strong>：短周期下穿长周期 → 卖出信号</li>
+            <li>🔗 <strong>均线粘合</strong>：多周期汇聚 → 行情即将爆发</li>
+        </ul>
+
+        <h3>4.2 MACD指标 —— 趋势研判</h3>
+
+        <p><strong>MACD构成：</strong></p>
+        <pre>MACD = DIF线 - DEA线
+DIF（差离值）= 12日EMA - 26日EMA
+DEA（信号线）= DIF的9日加权移动平均</pre>
+
+        <p><strong>MACD实战用法：</strong></p>
+
+        <table>
+            <tr>
+                <th>信号</th>
+                <th>形态</th>
+                <th>含义</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>金叉</td>
+                <td>DIF上穿DEA</td>
+                <td>多方占优</td>
+                <td>🟢 买入</td>
+            </tr>
+            <tr>
+                <td>死叉</td>
+                <td>DIF下穿DEA</td>
+                <td>空方占优</td>
+                <td>🔴 卖出</td>
+            </tr>
+            <tr>
+                <td>零轴上方</td>
+                <td>DIF>DEA</td>
+                <td>牛市格局</td>
+                <td>逢低买入</td>
+            </tr>
+            <tr>
+                <td>零轴下方</td>
+                <td>DIF<DEA</td>
+                <td>熊市格局</td>
+                <td>逢高卖出</td>
+            </tr>
+        </table>
+
+        <p><strong>高级用法 —— 背离：</strong></p>
+        <ul>
+            <li>⬆️ <strong>顶背离</strong>：股价创新高，但MACD没创新高 → ⚠️ 警惕回落！</li>
+            <li>⬇️ <strong>底背离</strong>：股价创新低，但MACD没创新低 → 🔔 关注反弹！</li>
+        </ul>
+
+        <h3>4.3 KDJ指标 —— 超买超卖</h3>
+
+        <p><strong>KDJ构成：</strong></p>
+        <ul>
+            <li>K值：快速随机指标（一般9日）</li>
+            <li>D值：K值的平滑移动平均</li>
+            <li>J值：3K - 2D，波动最敏感</li>
+        </ul>
+
+        <p><strong>实战判断：</strong></p>
+        <table>
+            <tr>
+                <th>区域</th>
+                <th>KDJ值</th>
+                <th>含义</th>
+                <th>操作建议</th>
+            </tr>
+            <tr>
+                <td>超买区</td>
+                <td>>80</td>
+                <td>股价过热</td>
+                <td>🔴 考虑卖出</td>
+            </tr>
+            <tr>
+                <td>超卖区</td>
+                <td><20</td>
+                <td>股价过冷</td>
+                <td>🟢 关注买入</td>
+            </tr>
+            <tr>
+                <td>中性区</td>
+                <td>20-80</td>
+                <td>正常波动</td>
+                <td>观望</td>
+            </tr>
+        </table>
+
+        <p><strong>金叉死叉：</strong></p>
+        <ul>
+            <li>🟢 KDJ金叉（K上穿D）+ 在20附近 → 较强的买入信号</li>
+            <li>🔴 KDJ死叉（K下穿D）+ 在80附近 → 较强的卖出信号</li>
+        </ul>
+
+        <h3>4.4 布林带（BBAND）—— 波动通道</h3>
+
+        <p><strong>布林带构成：</strong></p>
+        <pre>上轨 = MA20 + 2倍标准差（压力位）
+中轨 = MA20（趋势线）
+下轨 = MA20 - 2倍标准差（支撑位）</pre>
+
+        <p><strong>实战用法：</strong></p>
+
+        <table>
+            <tr>
+                <th>形态</th>
+                <th>含义</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>股价触及上轨</td>
+                <td>接近压力</td>
+                <td>🔴 谨慎/卖出</td>
+            </tr>
+            <tr>
+                <td>股价触及下轨</td>
+                <td>接近支撑</td>
+                <td>🟢 关注买入</td>
+            </tr>
+            <tr>
+                <td>布林带收口</td>
+                <td>行情蓄势</td>
+                <td>⏳ 等待突破</td>
+            </tr>
+            <tr>
+                <td>布林带开口</td>
+                <td>行情加速</td>
+                <td>📈 顺势而为</td>
+            </tr>
+        </table>
+
+        <h3>4.5 VOL成交量 —— 量先于价</h3>
+
+        <blockquote>"量为价先"是技术分析的核心原则</blockquote>
+
+        <p><strong>量价配合八律：</strong></p>
+
+        <table>
+            <tr>
+                <th>情况</th>
+                <th>信号</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>放量上涨</td>
+                <td>资金涌入</td>
+                <td>🟢 持股待涨</td>
+            </tr>
+            <tr>
+                <td>缩量上涨</td>
+                <td>动能不足</td>
+                <td>⚠️ 警惕回调</td>
+            </tr>
+            <tr>
+                <td>放量下跌</td>
+                <td>恐慌抛售</td>
+                <td>⚠️ 谨慎观望</td>
+            </tr>
+            <tr>
+                <td>缩量下跌</td>
+                <td>抛压减轻</td>
+                <td>🔔 底部信号</td>
+            </tr>
+            <tr>
+                <td>放量突破</td>
+                <td>真突破</td>
+                <td>🟢 顺势买入</td>
+            </tr>
+            <tr>
+                <td>缩量突破</td>
+                <td>假突破</td>
+                <td>🔴 警惕陷阱</td>
+            </tr>
+            <tr>
+                <td>地量见地价</td>
+                <td>极度缩量</td>
+                <td>🔔 底部区域</td>
+            </tr>
+            <tr>
+                <td>天量见天价</td>
+                <td>极度放量</td>
+                <td>🔴 警惕顶部</td>
+            </tr>
+        </table>
+
+        <p><strong>换手率参考：</strong></p>
+        <ul>
+            <li>1-3%：交易正常</li>
+            <li>3-5%：较为活跃</li>
+            <li>5-10%：高度活跃</li>
+            <li>>10%：异常活跃，警惕风险</li>
+        </ul>
+
+        <hr>
+
+        <h2>五、基本面分析基础</h2>
+
+        <h3>5.1 核心财务指标</h3>
+
+        <p><strong>估值类：</strong></p>
+        <table>
+            <tr>
+                <th>指标</th>
+                <th>计算公式</th>
+                <th>解读</th>
+            </tr>
+            <tr>
+                <td>PE（市盈率）</td>
+                <td>股价/每股收益</td>
+                <td>越低越便宜，一般<15为合理</td>
+            </tr>
+            <tr>
+                <td>PB（市净率）</td>
+                <td>股价/每股净资产</td>
+                <td>越低越有价值，<1为破净</td>
+            </tr>
+            <tr>
+                <td>PS（市销率）</td>
+                <td>股价/每股销售额</td>
+                <td>适合亏损公司，<3为合理</td>
+            </tr>
+        </table>
+
+        <p><strong>盈利类：</strong></p>
+        <table>
+            <tr>
+                <th>指标</th>
+                <th>解读</th>
+            </tr>
+            <tr>
+                <td>净利润增长率</td>
+                <td>>20%为高增长，<0需警惕</td>
+            </tr>
+            <tr>
+                <td>毛利率</td>
+                <td>>30%说明竞争力强</td>
+            </tr>
+            <tr>
+                <td>ROE（净资产收益率）</td>
+                <td>>15%为优秀</td>
+            </tr>
+        </table>
+
+        <p><strong>财务排雷：</strong></p>
+        <ul>
+            <li>⚠️ 应收账款异常增长</li>
+            <li>⚠️ 存货周转天数大幅增加</li>
+            <li>⚠️ 经营活动现金流持续为负</li>
+            <li>⚠️ 资产负债率超过70%</li>
+        </ul>
+
+        <h3>5.2 估值方法</h3>
+
+        <p><strong>相对估值法：</strong></p>
+        <ul>
+            <li>与行业平均PE/PB对比</li>
+            <li>与历史平均估值对比</li>
+        </ul>
+
+        <p><strong>绝对估值法（DCF）：</strong></p>
+        <ul>
+            <li>预测未来现金流</li>
+            <li>折现到现值</li>
+            <li>适合稳健投资者</li>
+        </ul>
+
+        <p><strong>PEG估值法：</strong></p>
+        <pre>PEG = PE / 净利润增长率
+PEG < 1：相对低估
+PEG = 1：合理估值
+PEG > 1：相对高估</pre>
+
+        <hr>
+
+        <h2>六、趋势分析与支撑压力</h2>
+
+        <h3>6.1 三种趋势</h3>
+
+        <table>
+            <tr>
+                <th>趋势</th>
+                <th>特征</th>
+                <th>操作策略</th>
+            </tr>
+            <tr>
+                <td>上升趋势</td>
+                <td>高点不断抬高，低点不断抬高</td>
+                <td>逢低买入，顺势而为</td>
+            </tr>
+            <tr>
+                <td>下降趋势</td>
+                <td>高点不断降低，低点不断降低</td>
+                <td>逢高卖出，轻仓观望</td>
+            </tr>
+            <tr>
+                <td>横盘震荡</td>
+                <td>高低点基本持平</td>
+                <td>高抛低吸，快进快出</td>
+            </tr>
+        </table>
+
+        <h3>6.2 支撑与压力</h3>
+
+        <p><strong>重要概念：</strong></p>
+        <ul>
+            <li>🟢 <strong>支撑位</strong>：股价下跌时遇到买盘支撑的区域</li>
+            <li>🔴 <strong>压力位</strong>：股价上涨时遇到卖盘压力的区域</li>
+            <li>🔄 <strong>角色转换</strong>：支撑跌破变压力，压力突破变支撑</li>
+        </ul>
+
+        <p><strong>识别支撑压力的方法：</strong></p>
+        <ol>
+            <li>前期高低点</li>
+            <li>均线位置（MA20、MA60）</li>
+            <li>成交密集区</li>
+            <li>整数关口（3000点、3500点等）</li>
+        </ol>
+
+        <hr>
+
+        <h2>七、风险控制（关键！）</h2>
+
+        <blockquote>🎯 风险控制是长期生存的核心！</blockquote>
+
+        <h3>7.1 止损原则</h3>
+
+        <table>
+            <tr>
+                <th>方法</th>
+                <th>说明</th>
+                <th>适用</th>
+            </tr>
+            <tr>
+                <td>固定止损</td>
+                <td>亏损X%无条件卖出</td>
+                <td>短线操作</td>
+            </tr>
+            <tr>
+                <td>移动止损</td>
+                <td>随价格上涨提高止损线</td>
+                <td>波段操作</td>
+            </tr>
+            <tr>
+                <td>逻辑止损</td>
+                <td>买入逻辑消失即卖出</td>
+                <td>趋势交易</td>
+            </tr>
+        </table>
+
+        <p><strong>建议：</strong></p>
+        <ul>
+            <li>短线止损：7-10%</li>
+            <li>中线止损：10-15%</li>
+            <li>长线止损：20%</li>
+        </ul>
+
+        <h3>7.2 仓位管理</h3>
+
+        <table>
+            <tr>
+                <th>仓位</th>
+                <th>操作</th>
+                <th>适用场景</th>
+            </tr>
+            <tr>
+                <td>满仓</td>
+                <td>100%资金买入</td>
+                <td>确定性极高</td>
+            </tr>
+            <tr>
+                <td>重仓</td>
+                <td>60-80%</td>
+                <td>明显趋势</td>
+            </tr>
+            <tr>
+                <td>半仓</td>
+                <td>50%</td>
+                <td>震荡行情</td>
+            </tr>
+            <tr>
+                <td>轻仓</td>
+                <td>20-30%</td>
+                <td>谨慎观望</td>
+            </tr>
+            <tr>
+                <td>空仓</td>
+                <td>0%</td>
+                <td>行情不明</td>
+            </tr>
+        </table>
+
+        <p><strong>仓位口诀：</strong></p>
+        <blockquote>"不该满仓时不满仓，不该空仓时不满仓"</blockquote>
+
+        <h3>7.3 交易纪律</h3>
+
+        <p>✅ <strong>应该做的：</strong></p>
+        <ul>
+            <li>制定交易计划，按计划执行</li>
+            <li>顺势而为，不要逆势操作</li>
+            <li>分散投资，不要单押一只</li>
+            <li>保留现金，永不满仓</li>
+            <li>记录交易，总结复盘</li>
+        </ul>
+
+        <p>❌ <strong>不应该做的：</strong></p>
+        <ul>
+            <li>不要追涨杀跌</li>
+            <li>不要频繁交易</li>
+            <li>不要重仓单一股票</li>
+            <li>不要忽视止损</li>
+            <li>不要情绪化交易</li>
+        </ul>
+
+        <hr>
+
+        <h2>八、常见术语速查表</h2>
+
+        <h3>基础术语</h3>
+
+        <table>
+            <tr>
+                <th>术语</th>
+                <th>含义</th>
+            </tr>
+            <tr>
+                <td>牛市</td>
+                <td>股价整体上涨（标普涨20%+进入牛市）</td>
+            </tr>
+            <tr>
+                <td>熊市</td>
+                <td>股价整体下跌（标普跌20%+进入熊市）</td>
+            </tr>
+            <tr>
+                <td>震荡市</td>
+                <td>股价在一定区间内反复波动</td>
+            </tr>
+            <tr>
+                <td>涨停</td>
+                <td>A股当日涨幅达到10%上限</td>
+            </tr>
+            <tr>
+                <td>跌停</td>
+                <td>A股当日跌幅达到10%下限</td>
+            </tr>
+        </table>
+
+        <h3>交易术语</h3>
+
+        <table>
+            <tr>
+                <th>术语</th>
+                <th>含义</th>
+            </tr>
+            <tr>
+                <td>建仓</td>
+                <td>开始买入股票</td>
+            </tr>
+            <tr>
+                <td>加仓</td>
+                <td>买入更多同一只股票</td>
+            </tr>
+            <tr>
+                <td>减仓</td>
+                <td>卖出一部分股票</td>
+            </tr>
+            <tr>
+                <td>清仓</td>
+                <td>卖出全部股票</td>
+            </tr>
+            <tr>
+                <td>补仓</td>
+                <td>被套后低价买入摊薄成本</td>
+            </tr>
+            <tr>
+                <td>割肉</td>
+                <td>亏损卖出（中性词）</td>
+            </tr>
+            <tr>
+                <td>追高</td>
+                <td>在高位买入（不推荐）</td>
+            </tr>
+            <tr>
+                <td>抄底</td>
+                <td>在低位买入（难度高）</td>
+            </tr>
+            <tr>
+                <td>踏空</td>
+                <td>行情上涨但没买入</td>
+            </tr>
+            <tr>
+                <td>套牢</td>
+                <td>买入后股价下跌亏损</td>
+            </tr>
+        </table>
+
+        <h3>技术术语</h3>
+
+        <table>
+            <tr>
+                <th>术语</th>
+                <th>含义</th>
+            </tr>
+            <tr>
+                <td>突破</td>
+                <td>股价向上穿越压力位</td>
+            </tr>
+            <tr>
+                <td>跌破</td>
+                <td>股价向下穿越支撑位</td>
+            </tr>
+            <tr>
+                <td>回踩</td>
+                <td>突破后回落测试支撑</td>
+            </tr>
+            <tr>
+                <td>企稳</td>
+                <td>下跌后开始横盘整理</td>
+            </tr>
+            <tr>
+                <td>筑底</td>
+                <td>在低位逐步形成底部</td>
+            </tr>
+            <tr>
+                <td>诱多</td>
+                <td>主力故意拉高引诱买入</td>
+            </tr>
+            <tr>
+                <td>诱空</td>
+                <td>主力故意打压逼出散户</td>
+            </tr>
+        </table>
+
+        <h3>资金术语</h3>
+
+        <table>
+            <tr>
+                <th>术语</th>
+                <th>含义</th>
+            </tr>
+            <tr>
+                <td>北向资金</td>
+                <td>港资通过沪港通买入A股</td>
+            </tr>
+            <tr>
+                <td>南向资金</td>
+                <td>A股资金买入港股</td>
+            </tr>
+            <tr>
+                <td>主力/庄家</td>
+                <td>能影响股价的大资金</td>
+            </tr>
+            <tr>
+                <td>散户</td>
+                <td>个人投资者</td>
+            </tr>
+            <tr>
+                <td>杠杆资金</td>
+                <td>融资借来的钱</td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>九、实用工具推荐</h2>
+
+        <h3>行情软件</h3>
+        <ul>
+            <li><strong>同花顺</strong>：功能全面，适合新手</li>
+            <li><strong>东方财富</strong>：资讯丰富</li>
+            <li><strong>通达信</strong>：技术分析强大</li>
+            <li><strong>雪球</strong>：投资社区+行情</li>
+        </ul>
+
+        <h3>数据网站</h3>
+        <ul>
+            <li><strong>东方财富网</strong>：www.eastmoney.com</li>
+            <li><strong>同花顺</strong>：www.10jqka.com.cn</li>
+            <li><strong>理杏仁</strong>：www.lexinchina.com（财务数据）</li>
+            <li><strong>巨潮资讯</strong>：www.cninfo.com.cn（官方公告）</li>
+        </ul>
+
+        <hr>
+
+        <h2>十、学习路径建议</h2>
+
+        <h3>新手入门（3个月）</h3>
+        <ol>
+            <li>理解基本概念和术语</li>
+            <li>学会看K线和均线</li>
+            <li>了解量价关系</li>
+            <li>模拟盘练习</li>
+        </ol>
+
+        <h3>进阶提升（6-12个月）</h3>
+        <ol>
+            <li>深入学习MACD、KDJ等指标</li>
+            <li>理解趋势和支撑压力</li>
+            <li>建立自己的交易系统</li>
+            <li>小资金实盘验证</li>
+        </ol>
+
+        <h3>形成体系（1-2年）</h3>
+        <ol>
+            <li>完善交易系统</li>
+            <li>做好风险控制</li>
+            <li>保持交易纪律</li>
+            <li>持续学习总结</li>
+        </ol>
+
+        <hr>
+
+        <div class="footer">
+            <p>📚 本文档综合了股票投资的核心知识，涵盖技术分析、基本面分析、风险控制等方面。</p>
+            <p>⚠️ 重要提示：投资有风险，入市需谨慎！本文档仅供参考，不构成任何投资建议。股票投资需要扎实的知识基础和良好的心态，切勿盲目跟风。</p>
+            <p>祝您投资顺利，稳健盈利！💰</p>
+            <p>嘻嘻 📊</p>
+        </div>
+    </div>
+</body>
+</html>

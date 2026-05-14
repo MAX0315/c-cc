@@ -1,0 +1,549 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - button [ref=e9] [cursor=pointer]:
+          - img [ref=e11]
+        - button [ref=e13] [cursor=pointer]:
+          - img [ref=e15]
+        - heading "飞书云文档" [level=1] [ref=e17] [cursor=pointer]
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e22]: 尚
+          - generic [ref=e24]: 尚学堂的云文档
+        - generic [ref=e28]:
+          - button "与我分享" [ref=e30]:
+            - generic [ref=e31]: 与我分享
+            - img [ref=e33]
+          - list [ref=e37]:
+            - generic [ref=e39] [cursor=pointer]:
+              - img [ref=e46]
+              - button "Claude Code 使用" [ref=e49]:
+                - generic [ref=e50]: Claude Code 使用
+    - generic [ref=e51]:
+      - generic [ref=e54]:
+        - img [ref=e58] [cursor=pointer]
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - generic [ref=e66]:
+                - generic [ref=e67]: 用户657004的组织
+                - img [ref=e68]
+              - paragraph [ref=e70]:
+                - generic [ref=e71]: Claude Code 使用
+            - paragraph [ref=e74]: 最新修改时间为05月06日
+          - generic [ref=e78]:
+            - button "登录/注册" [ref=e80] [cursor=pointer]
+            - button [ref=e81] [cursor=pointer]:
+              - img [ref=e83]
+      - generic [ref=e88]:
+        - list [ref=e96] [cursor=pointer]:
+          - listitem
+          - listitem [ref=e97]:
+            - link "Claude Code 使用" [ref=e98]:
+              - /url: "#GqgLdA2KOo8ly1xjgCHcwFYun5A"
+              - img [ref=e100]
+              - text: Claude Code 使用
+          - listitem [ref=e102]:
+            - link "第一章 Claude Code 基础入门" [ref=e103]:
+              - /url: "#doxcntf8BZ1SjVm0oZCEgaE5H7c"
+              - img [ref=e105]
+              - text: 第一章 Claude Code 基础入门
+          - listitem [ref=e107]:
+            - link "1.1 什么是 Claude Code" [ref=e108]:
+              - /url: "#doxcnPIjOMvCOkWykrI2bMXpQfb"
+              - img [ref=e110]
+              - text: 1.1 什么是 Claude Code
+          - listitem [ref=e112]:
+            - link "1.2 核心特点" [ref=e113]:
+              - /url: "#doxcnwbE72OkJmvaHf5OcX6MXmd"
+              - img [ref=e115]
+              - text: 1.2 核心特点
+          - listitem [ref=e117]:
+            - link "1.3 Claude Code vs 传统 IDE" [ref=e118]:
+              - /url: "#doxcn7YQ79UhFQS5IjvfnVIBsrb"
+              - img [ref=e120]
+              - text: 1.3 Claude Code vs 传统 IDE
+          - listitem [ref=e122]:
+            - link "1.4 使用场景" [ref=e123]:
+              - /url: "#doxcnAm5kRCA1iDIIpv04ye6HGg"
+              - img [ref=e125]
+              - text: 1.4 使用场景
+          - listitem [ref=e127]:
+            - link "第二章 安装与配置" [ref=e128]:
+              - /url: "#doxcnlIRjWTTdRxNN1Hpt5wJqEe"
+              - img [ref=e130]
+              - text: 第二章 安装与配置
+          - listitem [ref=e132]:
+            - link "2.1 系统要求" [ref=e133]:
+              - /url: "#doxcnnuOoGfukNBmKR0EIm4gE1e"
+              - img [ref=e135]
+              - text: 2.1 系统要求
+          - listitem [ref=e137]:
+            - link "2.2 安装方式" [ref=e138]:
+              - /url: "#doxcnlfz64fhXSp995PFmxWUVcc"
+              - img [ref=e140]
+              - text: 2.2 安装方式
+          - listitem [ref=e142]:
+            - link "方式一：npm 全局安装（推荐）" [ref=e143]:
+              - /url: "#doxcn4dE3b55UIIA6G59fuCQ9cb"
+              - img [ref=e145]
+              - text: 方式一：npm 全局安装（推荐）
+          - listitem [ref=e147]:
+            - link "方式二：Homebrew（macOS/Linux）" [ref=e148]:
+              - /url: "#doxcnG5pqnayFR5139KrKR8akZd"
+              - img [ref=e150]
+              - text: 方式二：Homebrew（macOS/Linux）
+          - listitem [ref=e152]:
+            - link "方式三：二进制下载" [ref=e153]:
+              - /url: "#doxcnBPPdHpNj8UuFQe1COiBxJg"
+              - img [ref=e155]
+              - text: 方式三：二进制下载
+          - listitem [ref=e157]:
+            - link "方式四：OpenClaw Agent 集成" [ref=e158]:
+              - /url: "#doxcn5E65pzmZAmGY2KbGOk90Ob"
+              - img [ref=e160]
+              - text: 方式四：OpenClaw Agent 集成
+          - listitem [ref=e162]:
+            - link "2.3 API Key 配置" [ref=e163]:
+              - /url: "#doxcn6BlVWda0urmD94wD40RGSh"
+              - img [ref=e165]
+              - text: 2.3 API Key 配置
+          - listitem [ref=e167]:
+            - link "2.4 配置文件" [ref=e168]:
+              - /url: "#doxcnALr1yZBm1QmtuCfakYGi7c"
+              - img [ref=e170]
+              - text: 2.4 配置文件
+          - listitem [ref=e172]:
+            - link "2.5 命令行参数" [ref=e173]:
+              - /url: "#doxcnAHICWony7EkIlN7yUZuCoh"
+              - img [ref=e175]
+              - text: 2.5 命令行参数
+          - listitem [ref=e177]:
+            - link "第三章 核心命令与操作" [ref=e178]:
+              - /url: "#doxcn5gWDWzzr37UeJ6jEk8nfGb"
+              - img [ref=e180]
+              - text: 第三章 核心命令与操作
+          - listitem [ref=e182]:
+            - link "3.1 基础操作命令" [ref=e183]:
+              - /url: "#doxcnWA4awXTaJXtzB2xhOB7KZc"
+              - img [ref=e185]
+              - text: 3.1 基础操作命令
+          - listitem [ref=e187]:
+            - link "3.2 文件操作命令" [ref=e188]:
+              - /url: "#doxcnsXJFkWgpHvJXxEJVT9YN9f"
+              - img [ref=e190]
+              - text: 3.2 文件操作命令
+          - listitem [ref=e192]:
+            - link "3.3 Git 操作命令" [ref=e193]:
+              - /url: "#doxcnN9YM4zo6ESrOULspacnEWe"
+              - img [ref=e195]
+              - text: 3.3 Git 操作命令
+          - listitem [ref=e197]:
+            - link "3.4 Bash 执行命令" [ref=e198]:
+              - /url: "#doxcnILZAbdYN9YO0292Nah7KTb"
+              - img [ref=e200]
+              - text: 3.4 Bash 执行命令
+          - listitem [ref=e202]:
+            - link "3.5 项目分析命令" [ref=e203]:
+              - /url: "#doxcnXJsgVji20tTj4blDII9Rmd"
+              - img [ref=e205]
+              - text: 3.5 项目分析命令
+          - listitem [ref=e207]:
+            - link "第四章 文件编辑技巧" [ref=e208]:
+              - /url: "#doxcn8Cttv7wVxOig43hST09JDc"
+              - img [ref=e210]
+              - text: 第四章 文件编辑技巧
+          - listitem [ref=e212]:
+            - link "4.1 编辑模式" [ref=e213]:
+              - /url: "#doxcntbWHtzzlLj1DTA4ifRco3d"
+              - img [ref=e215]
+              - text: 4.1 编辑模式
+          - listitem [ref=e217]:
+            - link "4.2 自然语言编辑" [ref=e218]:
+              - /url: "#doxcnuhcVIRxjxN8k6p8zTdR8Ne"
+              - img [ref=e220]
+              - text: 4.2 自然语言编辑
+          - listitem [ref=e222]:
+            - link "4.3 批量编辑" [ref=e223]:
+              - /url: "#doxcnDgBe8Mokg1xcW7tN4e7chg"
+              - img [ref=e225]
+              - text: 4.3 批量编辑
+          - listitem [ref=e227]:
+            - link "4.4 代码审查" [ref=e228]:
+              - /url: "#doxcnTlinTmo1rWWw68xz3nfZfe"
+              - img [ref=e230]
+              - text: 4.4 代码审查
+          - listitem [ref=e232]:
+            - link "4.5 编写测试" [ref=e233]:
+              - /url: "#doxcnJdonF2wLXNxI6Eac2i6xEe"
+              - img [ref=e235]
+              - text: 4.5 编写测试
+          - listitem [ref=e237]:
+            - link "第五章 项目实战流程" [ref=e238]:
+              - /url: "#doxcnMXcNEHLeLiMX1nSJVR5Mld"
+              - img [ref=e240]
+              - text: 第五章 项目实战流程
+          - listitem [ref=e242]:
+            - link "5.1 新项目开发流程" [ref=e243]:
+              - /url: "#doxcnxJULG3DNU34E4PyFtYcDPe"
+              - img [ref=e245]
+              - text: 5.1 新项目开发流程
+          - listitem [ref=e247]:
+            - link "5.2 Bug 修复流程" [ref=e248]:
+              - /url: "#doxcnoW6U2bHWsWQroYJ0dt96rd"
+              - img [ref=e250]
+              - text: 5.2 Bug 修复流程
+          - listitem [ref=e252]:
+            - link "5.3 重构流程" [ref=e253]:
+              - /url: "#doxcnsJTZtwB80v35vUp2sfQ1Vh"
+              - img [ref=e255]
+              - text: 5.3 重构流程
+          - listitem [ref=e257]:
+            - link "5.4 典型对话示例" [ref=e258]:
+              - /url: "#doxcnU9Sepa6pkWDuWtufX4tdFf"
+              - img [ref=e260]
+              - text: 5.4 典型对话示例
+          - listitem [ref=e262]:
+            - link "示例 1：创建 REST API" [ref=e263]:
+              - /url: "#doxcnD61uTDZxl5uAKCLfQlFVzb"
+              - img [ref=e265]
+              - text: 示例 1：创建 REST API
+          - listitem [ref=e267]:
+            - link "示例 2：数据迁移" [ref=e268]:
+              - /url: "#doxcnnnXmTH1YvKaOUStcifQXbf"
+              - img [ref=e270]
+              - text: 示例 2：数据迁移
+          - listitem [ref=e272]:
+            - link "第六章 模型选择与优化" [ref=e273]:
+              - /url: "#doxcnqm6u6qTYHgYU5Ptq7tBRVg"
+              - img [ref=e275]
+              - text: 第六章 模型选择与优化
+          - listitem [ref=e277]:
+            - link "6.1 Claude 模型家族" [ref=e278]:
+              - /url: "#doxcnCA8rMmF9f7OKlzPyCblKnd"
+              - img [ref=e280]
+              - text: 6.1 Claude 模型家族
+          - listitem [ref=e282]:
+            - link "6.2 模型选择指南" [ref=e283]:
+              - /url: "#doxcnyMMY2Uxuqdfg7eto0s6njh"
+              - img [ref=e285]
+              - text: 6.2 模型选择指南
+          - listitem [ref=e287]:
+            - link "6.3 对话内切换模型" [ref=e288]:
+              - /url: "#doxcndlGEuBkrg7bTlsVvtaKzsg"
+              - img [ref=e290]
+              - text: 6.3 对话内切换模型
+          - listitem [ref=e292]:
+            - link "6.4 模型参数调优" [ref=e293]:
+              - /url: "#doxcnMw8aqnnEXhX829Zd6CIYqf"
+              - img [ref=e295]
+              - text: 6.4 模型参数调优
+          - listitem [ref=e297]:
+            - link "6.5 成本优化策略" [ref=e298]:
+              - /url: "#doxcnfpwu0lxW8ejDCbG4fMm6yb"
+              - img [ref=e300]
+              - text: 6.5 成本优化策略
+          - listitem [ref=e302]:
+            - link "第七章 团队协作与工作流集成" [ref=e303]:
+              - /url: "#doxcnKMcieGy6RLqqzbpD4eLGCe"
+              - img [ref=e305]
+              - text: 第七章 团队协作与工作流集成
+          - listitem [ref=e307]:
+            - link "7.1 团队级配置文件" [ref=e308]:
+              - /url: "#doxcnHXMbOrMFqD4X2jWtbOMd7f"
+              - img [ref=e310]
+              - text: 7.1 团队级配置文件
+          - listitem [ref=e312]:
+            - link "7.2 CI/CD 集成" [ref=e313]:
+              - /url: "#doxcn2F7IGFdm8PFWrBPSATq1uh"
+              - img [ref=e315]
+              - text: 7.2 CI/CD 集成
+          - listitem [ref=e317]:
+            - link "GitHub Actions" [ref=e318]:
+              - /url: "#doxcn37lU5f6BkE6yj0zeyT8Wjd"
+              - img [ref=e320]
+              - text: GitHub Actions
+          - listitem [ref=e322]:
+            - link "GitLab CI" [ref=e323]:
+              - /url: "#doxcn3fUQLRJ8Dkion29OYJrzYb"
+              - img [ref=e325]
+              - text: GitLab CI
+          - listitem [ref=e327]:
+            - link "7.3 Git Hooks 集成" [ref=e328]:
+              - /url: "#doxcnUr1I7OIPjl1awEVHdYAjWh"
+              - img [ref=e330]
+              - text: 7.3 Git Hooks 集成
+          - listitem [ref=e332]:
+            - link "7.4 项目文档自动化" [ref=e333]:
+              - /url: "#doxcnFI1O6g8puk5kh1gdamCyQh"
+              - img [ref=e335]
+              - text: 7.4 项目文档自动化
+          - listitem [ref=e337]:
+            - link "7.5 代码审查清单" [ref=e338]:
+              - /url: "#doxcnQLKYZOx1HzWjdyFND5P08g"
+              - img [ref=e340]
+              - text: 7.5 代码审查清单
+          - listitem [ref=e342]:
+            - link "第八章 提示词工程技巧" [ref=e343]:
+              - /url: "#doxcnGOdxLmoI9ns5ul6UcqUTNf"
+              - img [ref=e345]
+              - text: 第八章 提示词工程技巧
+          - listitem [ref=e347]:
+            - link "8.1 有效提示词结构" [ref=e348]:
+              - /url: "#doxcnKLEWMm7hRlidgRfjSykiXb"
+              - img [ref=e350]
+              - text: 8.1 有效提示词结构
+          - listitem [ref=e352]:
+            - link "8.2 常用提示词模板" [ref=e353]:
+              - /url: "#doxcnlkpvSxkkLo3UehvjRoHvtb"
+              - img [ref=e355]
+              - text: 8.2 常用提示词模板
+          - listitem [ref=e357]:
+            - link "Bug 修复模板" [ref=e358]:
+              - /url: "#doxcnTFlAob8qoOSI11fodLuBod"
+              - img [ref=e360]
+              - text: Bug 修复模板
+          - listitem [ref=e362]:
+            - link "功能开发模板" [ref=e363]:
+              - /url: "#doxcnYT7qljrrrxcfy1eGscf5Bf"
+              - img [ref=e365]
+              - text: 功能开发模板
+          - listitem [ref=e367]:
+            - link "代码审查模板" [ref=e368]:
+              - /url: "#doxcnmn1FSClLsH5gXIuYAKmzbf"
+              - img [ref=e370]
+              - text: 代码审查模板
+          - listitem [ref=e372]:
+            - link "8.3 提示词优化技巧" [ref=e373]:
+              - /url: "#doxcnffNxcoCV7q9K4ipDTmrE9c"
+              - img [ref=e375]
+              - text: 8.3 提示词优化技巧
+          - listitem [ref=e377]:
+            - link "第九章 安全与权限管理" [ref=e378]:
+              - /url: "#doxcn37W71Dv3clznpX6R1k4X0e"
+              - img [ref=e380]
+              - text: 第九章 安全与权限管理
+          - listitem [ref=e382]:
+            - link "9.1 权限模型" [ref=e383]:
+              - /url: "#doxcnmul02OLAyRZTKUaeMZwDae"
+              - img [ref=e385]
+              - text: 9.1 权限模型
+          - listitem [ref=e387]:
+            - link "9.2 安全风险与防范" [ref=e388]:
+              - /url: "#doxcnraZbuaBe1yUixE6MVbj8Wh"
+              - img [ref=e390]
+              - text: 9.2 安全风险与防范
+          - listitem [ref=e392]:
+            - link "9.3 安全审查命令" [ref=e393]:
+              - /url: "#doxcndMWEKf3PotNlPJwcCGnwpd"
+              - img [ref=e395]
+              - text: 9.3 安全审查命令
+          - listitem [ref=e397]:
+            - link "9.4 生产环境最佳实践" [ref=e398]:
+              - /url: "#doxcnTj2O2pdktDwwrRMuRM8zSc"
+              - img [ref=e400]
+              - text: 9.4 生产环境最佳实践
+          - listitem [ref=e402]:
+            - link "第十章 高级配置与定制" [ref=e403]:
+              - /url: "#doxcncVWO1CxBX2fpDoVkv1ELTe"
+              - img [ref=e405]
+              - text: 第十章 高级配置与定制
+          - listitem [ref=e407]:
+            - link "10.1 .clauderc 完整配置" [ref=e408]:
+              - /url: "#doxcnFZr6kdoCrzrODcsqbFTvdb"
+              - img [ref=e410]
+              - text: 10.1 .clauderc 完整配置
+          - listitem [ref=e412]:
+            - link "10.2 项目级配置覆盖" [ref=e413]:
+              - /url: "#doxcnLmX0Sb1cmjW41D9PiToi3b"
+              - img [ref=e415]
+              - text: 10.2 项目级配置覆盖
+          - listitem [ref=e417]
+        - generic [ref=e420]:
+          - generic [ref=e429]:
+            - generic [ref=e430]:
+              - heading "Claude Code 使用" [level=1] [ref=e432]:
+                - generic [ref=e434]: Claude Code 使用
+              - generic [ref=e439]: 5月6日修改
+            - generic [ref=e442]:
+              - generic [ref=e446]: 📖 本文档面向所有希望使用 Claude Code 进行高效编程开发的开发者，涵盖从安装配置到高级技巧的完整知识体系。
+              - generic [ref=e458]: 第一章 Claude Code 基础入门
+              - generic [ref=e464]: 1.1 什么是 Claude Code
+              - generic [ref=e469]: Claude Code 是 Anthropic 公司为 Claude AI 助手开发的 命令行编程工具 ，它将强大的 Claude 模型能力与本地开发环境深度集成，让 AI 能够直接读取、创建、编辑代码，并执行 Git 操作、搜索文件、安装依赖等开发任务。
+              - generic [ref=e475]: 1.2 核心特点
+              - table [ref=e487]:
+                - rowgroup [ref=e491]:
+                  - row "特点 说明" [ref=e492]:
+                    - cell "特点" [ref=e493]:
+                      - generic [ref=e499]: 特点
+                    - cell "说明" [ref=e500]:
+                      - generic [ref=e506]: 说明
+                  - row "🎯 代码感知 能读取和修改项目中的任意文件" [ref=e507]:
+                    - cell "🎯 代码感知" [ref=e508]:
+                      - generic [ref=e514]: 🎯 代码感知
+                    - cell "能读取和修改项目中的任意文件" [ref=e515]:
+                      - generic [ref=e521]: 能读取和修改项目中的任意文件
+                  - row "🔍 智能搜索 内置文件系统搜索，定位代码位置" [ref=e522]:
+                    - cell "🔍 智能搜索" [ref=e523]:
+                      - generic [ref=e529]: 🔍 智能搜索
+                    - cell "内置文件系统搜索，定位代码位置" [ref=e530]:
+                      - generic [ref=e536]: 内置文件系统搜索，定位代码位置
+                  - row "⚡ 即时执行 执行 Bash 命令、安装依赖、运行测试" [ref=e537]:
+                    - cell "⚡ 即时执行" [ref=e538]:
+                      - generic [ref=e544]: ⚡ 即时执行
+                    - cell "执行 Bash 命令、安装依赖、运行测试" [ref=e545]:
+                      - generic [ref=e551]: 执行 Bash 命令、安装依赖、运行测试
+                  - row "📊 上下文理解 自动分析项目结构，理解代码库" [ref=e552]:
+                    - cell "📊 上下文理解" [ref=e553]:
+                      - generic [ref=e559]: 📊 上下文理解
+                    - cell "自动分析项目结构，理解代码库" [ref=e560]:
+                      - generic [ref=e566]: 自动分析项目结构，理解代码库
+                  - row "🔄 Git 集成 追踪变更、创建提交、浏览历史" [ref=e567]:
+                    - cell "🔄 Git 集成" [ref=e568]:
+                      - generic [ref=e574]: 🔄 Git 集成
+                    - cell "追踪变更、创建提交、浏览历史" [ref=e575]:
+                      - generic [ref=e581]: 追踪变更、创建提交、浏览历史
+                  - row "🧠 会话记忆 理解多轮对话中的项目状态变化" [ref=e582]:
+                    - cell "🧠 会话记忆" [ref=e583]:
+                      - generic [ref=e589]: 🧠 会话记忆
+                    - cell "理解多轮对话中的项目状态变化" [ref=e590]:
+                      - generic [ref=e596]: 理解多轮对话中的项目状态变化
+              - generic [ref=e604]: 1.3 Claude Code vs 传统 IDE
+              - table [ref=e616]:
+                - rowgroup [ref=e621]:
+                  - row "维度 Claude Code 传统 IDE" [ref=e622]:
+                    - cell "维度" [ref=e623]:
+                      - generic [ref=e629]: 维度
+                    - cell "Claude Code" [ref=e630]:
+                      - generic [ref=e636]: Claude Code
+                    - cell "传统 IDE" [ref=e637]:
+                      - generic [ref=e643]: 传统 IDE
+                  - row "交互方式 自然语言对话驱动 点击和快捷键操作" [ref=e644]:
+                    - cell "交互方式" [ref=e645]:
+                      - generic [ref=e651]: 交互方式
+                    - cell "自然语言对话驱动" [ref=e652]:
+                      - generic [ref=e658]: 自然语言对话驱动
+                    - cell "点击和快捷键操作" [ref=e659]:
+                      - generic [ref=e665]: 点击和快捷键操作
+                  - row "上下文 AI 自动理解整个代码库 需要手动查找和导航" [ref=e666]:
+                    - cell "上下文" [ref=e667]:
+                      - generic [ref=e673]: 上下文
+                    - cell "AI 自动理解整个代码库" [ref=e674]:
+                      - generic [ref=e680]: AI 自动理解整个代码库
+                    - cell "需要手动查找和导航" [ref=e681]:
+                      - generic [ref=e687]: 需要手动查找和导航
+                  - row "任务处理 多步骤任务自动规划和执行 需要人工分解步骤" [ref=e688]:
+                    - cell "任务处理" [ref=e689]:
+                      - generic [ref=e695]: 任务处理
+                    - cell "多步骤任务自动规划和执行" [ref=e696]:
+                      - generic [ref=e702]: 多步骤任务自动规划和执行
+                    - cell "需要人工分解步骤" [ref=e703]:
+                      - generic [ref=e709]: 需要人工分解步骤
+                  - row "代码生成 基于对话意图生成，灵活度高 模板和代码补全" [ref=e710]:
+                    - cell "代码生成" [ref=e711]:
+                      - generic [ref=e717]: 代码生成
+                    - cell "基于对话意图生成，灵活度高" [ref=e718]:
+                      - generic [ref=e724]: 基于对话意图生成，灵活度高
+                    - cell "模板和代码补全" [ref=e725]:
+                      - generic [ref=e731]: 模板和代码补全
+                  - row "学习曲线 几乎为零，简单易用 需要熟悉 IDE 操作" [ref=e732]:
+                    - cell "学习曲线" [ref=e733]:
+                      - generic [ref=e739]: 学习曲线
+                    - cell "几乎为零，简单易用" [ref=e740]:
+                      - generic [ref=e746]: 几乎为零，简单易用
+                    - cell "需要熟悉 IDE 操作" [ref=e747]:
+                      - generic [ref=e753]: 需要熟悉 IDE 操作
+              - generic [ref=e761]: 1.4 使用场景
+              - table [ref=e773]:
+                - rowgroup [ref=e777]:
+                  - row "场景 Claude Code 优势" [ref=e778]:
+                    - cell "场景" [ref=e779]:
+                      - generic [ref=e785]: 场景
+                    - cell "Claude Code 优势" [ref=e786]:
+                      - generic [ref=e792]: Claude Code 优势
+                  - row "🆕 新项目启动 一句话描述需求，生成完整项目结构" [ref=e793]:
+                    - cell "🆕 新项目启动" [ref=e794]:
+                      - generic [ref=e800]: 🆕 新项目启动
+                    - cell "一句话描述需求，生成完整项目结构" [ref=e801]:
+                      - generic [ref=e807]: 一句话描述需求，生成完整项目结构
+                  - row "🐛 Bug 修复 上传错误日志，自动定位和修复问题" [ref=e808]:
+                    - cell "🐛 Bug 修复" [ref=e809]:
+                      - generic [ref=e815]: 🐛 Bug 修复
+                    - cell "上传错误日志，自动定位和修复问题" [ref=e816]:
+                      - generic [ref=e822]: 上传错误日志，自动定位和修复问题
+                  - row "🔄 代码重构 描述目标行为，AI 完成代码迁移" [ref=e823]:
+                    - cell "🔄 代码重构" [ref=e824]:
+                      - generic [ref=e830]: 🔄 代码重构
+                    - cell "描述目标行为，AI 完成代码迁移" [ref=e831]:
+                      - generic [ref=e837]: 描述目标行为，AI 完成代码迁移
+                  - row "📖 代码学习 解释陌生代码，分析实现原理" [ref=e838]:
+                    - cell "📖 代码学习" [ref=e839]:
+                      - generic [ref=e845]: 📖 代码学习
+                    - cell "解释陌生代码，分析实现原理" [ref=e846]:
+                      - generic [ref=e852]: 解释陌生代码，分析实现原理
+                  - row "🧪 编写测试 生成单元测试和集成测试" [ref=e853]:
+                    - cell "🧪 编写测试" [ref=e854]:
+                      - generic [ref=e860]: 🧪 编写测试
+                    - cell "生成单元测试和集成测试" [ref=e861]:
+                      - generic [ref=e867]: 生成单元测试和集成测试
+                  - row "📝 文档编写 自动生成和更新代码文档" [ref=e868]:
+                    - cell "📝 文档编写" [ref=e869]:
+                      - generic [ref=e875]: 📝 文档编写
+                    - cell "自动生成和更新代码文档" [ref=e876]:
+                      - generic [ref=e882]: 自动生成和更新代码文档
+                  - row "🔀 Git 操作 智能提交、代码审查、分支管理" [ref=e883]:
+                    - cell "🔀 Git 操作" [ref=e884]:
+                      - generic [ref=e890]: 🔀 Git 操作
+                    - cell "智能提交、代码审查、分支管理" [ref=e891]:
+                      - generic [ref=e897]: 智能提交、代码审查、分支管理
+                  - row "🔧 DevOps 编写脚本、配置 CI/CD" [ref=e898]:
+                    - cell "🔧 DevOps" [ref=e899]:
+                      - generic [ref=e905]: 🔧 DevOps
+                    - cell "编写脚本、配置 CI/CD" [ref=e906]:
+                      - generic [ref=e912]: 编写脚本、配置 CI/CD
+              - generic [ref=e926]: 第二章 安装与配置
+              - generic [ref=e932]: 2.1 系统要求
+              - table [ref=e944]:
+                - rowgroup [ref=e948]:
+                  - row "项目 要求" [ref=e949]:
+                    - cell "项目" [ref=e950]:
+                      - generic [ref=e956]: 项目
+                    - cell "要求" [ref=e957]:
+                      - generic [ref=e963]: 要求
+                  - row [ref=e964]:
+                    - cell [ref=e965]
+                    - cell [ref=e968]
+                  - row [ref=e971]:
+                    - cell [ref=e972]
+                    - cell [ref=e975]
+                  - row [ref=e978]:
+                    - cell [ref=e979]
+                    - cell [ref=e982]
+                  - row [ref=e985]:
+                    - cell [ref=e986]
+                    - cell [ref=e989]
+          - generic [ref=e997]:
+            - generic [ref=e998]: 评论（0）
+            - img [ref=e1002] [cursor=pointer]
+          - button [ref=e1007] [cursor=pointer]:
+            - img [ref=e1009]
+    - generic:
+      - generic:
+        - generic:
+          - menu:
+            - generic:
+              - generic:
+                - menuitem "帮助中心":
+                  - generic:
+                    - generic:
+                      - img
+                  - generic: 帮助中心
+              - generic:
+                - menuitem "效率指南":
+                  - generic:
+                    - generic:
+                      - img
+                  - generic: 效率指南
+        - img [ref=e1015] [cursor=pointer]
+  - textbox [ref=e1018]

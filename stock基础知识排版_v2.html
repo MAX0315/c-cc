@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票的基本涨跌知识</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --text-primary: #e8eaed;
+            --text-secondary: #9ca3af;
+            --accent-green: #00d26a;
+            --accent-red: #ff4757;
+            --accent-gold: #f0b90b;
+            --accent-blue: #3478f6;
+            --border-color: #2a3548;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0d1420 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(52, 120, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 210, 106, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-gold), #fbbf24);
+            color: #000;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #e8eaed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 8px 32px rgba(52, 120, 246, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-blue), #5a9cf8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .section-tag {
+            font-size: 11px;
+            color: var(--accent-blue);
+            background: rgba(52, 120, 246, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 24px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.1), rgba(0, 210, 106, 0.05));
+            border: 1px solid rgba(0, 210, 106, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box.warning {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 71, 87, 0.05));
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+
+        .highlight-box .title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .highlight-box.warning .title {
+            color: var(--accent-red);
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        .up { color: var(--accent-green); }
+        .down { color: var(--accent-red); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: rgba(52, 120, 246, 0.05);
+        }
+
+        .tag-green {
+            display: inline-block;
+            background: rgba(0, 210, 106, 0.15);
+            color: var(--accent-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .tag-red {
+            display: inline-block;
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .tag-blue {
+            display: inline-block;
+            background: rgba(52, 120, 246, 0.15);
+            color: #5a9cf8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            overflow-x: auto;
+        }
+
+        .kline-diagram {
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .kline-diagram pre {
+            display: inline-block;
+            text-align: left;
+            color: var(--accent-gold);
+        }
+
+        .price-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .price-item {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-item .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .price-item .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-item .symbol {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .comparison-item .desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .chart-pattern {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .pattern-icon {
+            font-size: 48px;
+        }
+
+        .pattern-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .pattern-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .pattern-signal {
+            margin-left: auto;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .signal-buy {
+            background: rgba(0, 210, 106, 0.15);
+            color: var(--accent-green);
+        }
+
+        .signal-sell {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+        }
+
+        .signal-warn {
+            background: rgba(240, 185, 11, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .signal-watch {
+            background: rgba(52, 120, 246, 0.15);
+            color: #5a9cf8;
+        }
+
+        .indicator-section {
+            margin-top: 24px;
+        }
+
+        .indicator-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .indicator-badge {
+            background: linear-gradient(135deg, var(--accent-gold), #fbbf24);
+            color: #000;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .indicator-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .indicator-alias {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+
+        .ma-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .ma-item {
+            text-align: center;
+            padding: 14px 8px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ma-item .period {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .ma-item .name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .ma-item .use {
+            font-size: 11px;
+            color: var(--accent-gold);
+            margin-top: 6px;
+        }
+
+        .signal-list {
+            margin: 16px 0;
+        }
+
+        .signal-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .signal-item:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .signal-icon {
+            font-size: 24px;
+        }
+
+        .signal-text {
+            flex: 1;
+        }
+
+        .signal-text .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .signal-text .desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .macd-formula {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 16px 0;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .macd-formula .label {
+            color: var(--text-secondary);
+            margin-right: 8px;
+        }
+
+        .macd-formula .value {
+            color: var(--accent-gold);
+        }
+
+        .kdj-bands {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg,
+                rgba(0, 210, 106, 0.1) 0%,
+                rgba(240, 185, 11, 0.1) 50%,
+                rgba(255, 71, 87, 0.1) 100%);
+            border-radius: 12px;
+        }
+
+        .kdj-band {
+            text-align: center;
+            flex: 1;
+        }
+
+        .kdj-band .range {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .kdj-band .range.green { color: var(--accent-green); }
+        .kdj-band .range.yellow { color: var(--accent-gold); }
+        .kdj-band .range.red { color: var(--accent-red); }
+
+        .kdj-band .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .kdj-band .action {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .bollinger-diagram {
+            margin: 20px 0;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .bollinger-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .bollinger-labels .upper { color: var(--accent-red); }
+        .bollinger-labels .mid { color: var(--accent-gold); }
+        .bollinger-labels .lower { color: var(--accent-green); }
+
+        .bollinger-bands {
+            height: 60px;
+            background: linear-gradient(to right,
+                var(--accent-green) 0%,
+                var(--accent-green) 33%,
+                var(--accent-gold) 33%,
+                var(--accent-gold) 50%,
+                var(--accent-red) 50%,
+                var(--accent-red) 100%);
+            border-radius: 8px;
+            opacity: 0.3;
+        }
+
+        .volume-analysis {
+            margin: 20px 0;
+        }
+
+        .volume-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .volume-item {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .volume-item.up { border-left-color: var(--accent-green); }
+        .volume-item.down { border-left-color: var(--accent-red); }
+
+        .volume-item .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .volume-item .signal {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .volume-item .action {
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .action-green { color: var(--accent-green); }
+        .action-red { color: var(--accent-red); }
+        .action-warn { color: var(--accent-gold); }
+
+        .term-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .term-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .term-item .term {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-gold);
+            min-width: 60px;
+        }
+
+        .term-item .mean {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .tool-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .tool-item {
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .tool-item:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .tool-item .name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .tool-item .desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .learning-path {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .learning-path::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-gold));
+            border-radius: 1px;
+        }
+
+        .path-item {
+            position: relative;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .path-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 28px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .path-item .phase {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .path-item .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .path-item ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .path-item li {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .footer-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-section .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .footer-section .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .footer-section .desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+        }
+
+        .footer-section .warning {
+            display: inline-block;
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--accent-red);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .footer-section .author {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+
+            .section-card {
+                padding: 20px;
+            }
+
+            .ma-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .volume-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-list {
+                grid-template-columns: 1fr;
+            }
+
+            .term-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kdj-bands {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">📚 投资学习</div>
+            <h1>股票的基本涨跌知识</h1>
+            <p class="hero-subtitle">从零开始，系统掌握股票投资核心技能</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">核心章节</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">50+</div>
+                    <div class="stat-label">知识点</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">实用工具</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 提示框 -->
+        <div class="section">
+            <div class="highlight-box warning" style="animation: fadeInUp 0.5s ease-out;">
+                <div class="title">⚠️ 风险提示</div>
+                <p style="margin: 0; color: var(--accent-red);">本指南仅供学习参考，不构成投资建议。股市有风险，入市需谨慎！</p>
+            </div>
+        </div>
+
+        <!-- 一、股票基础概念 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📖</div>
+                    <div class="section-title">一、股票基础概念</div>
+                </div>
+
+                <h3>什么是股票？</h3>
+                <p>股票是股份有限公司发行的所有权凭证，购买股票即成为公司的股东，享有公司盈利分红和重大决策投票权。</p>
+
+                <div class="highlight-box">
+                    <div class="title">💡 核心要点</div>
+                    <ul style="margin: 0;">
+                        <li>股票代表公司<span style="color: var(--accent-gold);">净资产的所有权份额</span></li>
+                        <li>股价短期由市场供求决定，长期由公司基本面决定</li>
+                        <li>中国A股市场主要有上海证券交易所和深圳证券交易所</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 二、股票涨跌原理 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📊</div>
+                    <div class="section-title">二、股票涨跌原理</div>
+                </div>
+
+                <h3>2.1 基本供需关系</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="symbol">📈</div>
+                        <div class="desc">买盘 > 卖盘</div>
+                        <div class="tag-green">股价上涨 ↑</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="symbol">📉</div>
+                        <div class="desc">买盘 < 卖盘</div>
+                        <div class="tag-red">股价下跌 ↓</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="symbol">➡️</div>
+                        <div class="desc">买卖均衡</div>
+                        <div class="tag-blue">股价横盘 →</div>
+                    </div>
+                </div>
+
+                <h3>2.2 影响股价的核心因素</h3>
+
+                <div class="price-info">
+                    <div class="price-item">
+                        <span class="label">基本面因素</span>
+                    </div>
+                </div>
+                <ul>
+                    <li>📊 <strong>公司业绩</strong>：净利润增长 → <span class="up">股价上涨</span></li>
+                    <li>💰 <strong>盈利能力</strong>：毛利率、ROE等指标优秀 → 资金青睐</li>
+                    <li>📈 <strong>行业前景</strong>：朝阳行业更受市场关注</li>
+                </ul>
+
+                <div class="price-info">
+                    <div class="price-item">
+                        <span class="label">市场面因素</span>
+                    </div>
+                </div>
+                <ul>
+                    <li>🌍 <strong>宏观经济</strong>：GDP增长、货币政策宽松 → 利好股市</li>
+                    <li>🏛️ <strong>政策影响</strong>：产业扶持政策 → 相关板块上涨</li>
+                    <li>💭 <strong>市场情绪</strong>：投资者信心影响短期走势</li>
+                    <li>💵 <strong>资金面</strong>：北向资金、杠杆资金流向</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 三、K线图基础知识 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📈</div>
+                    <div class="section-title">三、K线图基础知识</div>
+                    <span class="section-tag">实战重点</span>
+                </div>
+
+                <h3>3.1 K线的构成</h3>
+                <div class="highlight-box">
+                    <div class="title">📖 起源</div>
+                    <p style="margin: 0;">K线起源于日本米市，又称"蜡烛图"，由四个价格组成</p>
+                </div>
+
+                <div class="kline-diagram">
+                    <pre>     ┌──┐
+     │  │ ← 上影线（最高价）
+ ┌───┤  ├───┐
+ │   │  │   │ ← 实体（开盘-收盘）
+ └───┤  ├───┘
+     │  │ ← 下影线（最低价）
+     └──┘</pre>
+                </div>
+
+                <div class="price-info">
+                    <div class="price-item">
+                        <span class="label">开盘价</span>
+                        <span class="value">集合竞价最终成交价</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="label">收盘价</span>
+                        <span class="value">交易日最后一个成交价</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="label">最高价</span>
+                        <span class="value">当日最高成交价</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="label">最低价</span>
+                        <span class="value">当日最低成交价</span>
+                    </div>
+                </div>
+
+                <h3>3.2 阳线与阴线</h3>
+                <table>
+                    <tr>
+                        <th>类型</th>
+                        <th>颜色</th>
+                        <th>条件</th>
+                        <th>含义</th>
+                    </tr>
+                    <tr>
+                        <td><strong>阳线</strong></td>
+                        <td><span class="tag-green">红色/空心</span></td>
+                        <td>收盘价 > 开盘价</td>
+                        <td><span class="up">上涨</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>阴线</strong></td>
+                        <td><span class="tag-red">绿色/实心</span></td>
+                        <td>收盘价 < 开盘价</td>
+                        <td><span class="down">下跌</span></td>
+                    </tr>
+                </table>
+
+                <h3>3.3 经典K线形态（实战重点）</h3>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">🔄 反转形态：</p>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">🔨</div>
+                    <div class="pattern-info">
+                        <h4>锤子线</h4>
+                        <p>下影线是实体的2-3倍，出现在下跌底部</p>
+                    </div>
+                    <span class="pattern-signal signal-buy">买入信号</span>
+                </div>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">⚡</div>
+                    <div class="pattern-info">
+                        <h4>上吊线</h4>
+                        <p>锤子线的倒置，出现在上涨顶部</p>
+                    </div>
+                    <span class="pattern-signal signal-warn">警惕回落</span>
+                </div>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">⭐</div>
+                    <div class="pattern-info">
+                        <h4>吞没形态</h4>
+                        <p>阳包阴（买入）、阴包阳（卖出）</p>
+                    </div>
+                    <span class="pattern-signal signal-buy">买入/卖出</span>
+                </div>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">🔄</div>
+                    <div class="pattern-info">
+                        <h4>十字星</h4>
+                        <p>开盘=收盘，多空博弈平衡</p>
+                    </div>
+                    <span class="pattern-signal signal-watch">观望信号</span>
+                </div>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin: 24px 0 12px;">➡️ 持续形态：</p>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">➡️</div>
+                    <div class="pattern-info">
+                        <h4>纺锤线</h4>
+                        <p>实体小、上下影线长</p>
+                    </div>
+                    <span class="pattern-signal signal-watch">盘整信号</span>
+                </div>
+
+                <div class="chart-pattern">
+                    <div class="pattern-icon">📦</div>
+                    <div class="pattern-info">
+                        <h4>三兵形态</h4>
+                        <p>红三兵（强势）、黑三兵（弱势）</p>
+                    </div>
+                    <span class="pattern-signal signal-buy">强势/弱势</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 四、常用技术指标 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📉</div>
+                    <div class="section-title">四、常用技术指标</div>
+                    <span class="section-tag">重点</span>
+                </div>
+
+                <!-- 均线系统 -->
+                <div class="indicator-section">
+                    <div class="indicator-header">
+                        <span class="indicator-badge">MA</span>
+                        <span class="indicator-name">均线系统</span>
+                        <span class="indicator-alias">—— 趋势之王</span>
+                    </div>
+                    <p>将一定周期内的收盘价加权平均，连接成曲线</p>
+
+                    <div class="ma-grid">
+                        <div class="ma-item">
+                            <div class="period">MA5</div>
+                            <div class="name">一周均线</div>
+                            <div class="use">超短线参考</div>
+                        </div>
+                        <div class="ma-item">
+                            <div class="period">MA10</div>
+                            <div class="name">两周均线</div>
+                            <div class="use">短线判断</div>
+                        </div>
+                        <div class="ma-item">
+                            <div class="period">MA20</div>
+                            <div class="name">一个月</div>
+                            <div class="use">中期分水岭</div>
+                        </div>
+                        <div class="ma-item">
+                            <div class="period">MA60</div>
+                            <div class="name">一季度</div>
+                            <div class="use">长期确认</div>
+                        </div>
+                        <div class="ma-item">
+                            <div class="period">MA120</div>
+                            <div class="name">半年线</div>
+                            <div class="use">牛熊分界</div>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">均线实战用法：</p>
+                    <div class="signal-list">
+                        <div class="signal-item">
+                            <div class="signal-icon">✅</div>
+                            <div class="signal-text">
+                                <div class="name">多头排列</div>
+                                <div class="desc">短周期在上、长周期在下 → 强势上涨</div>
+                            </div>
+                            <span class="signal-buy" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">🟢 强势</span>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">❌</div>
+                            <div class="signal-text">
+                                <div class="name">空头排列</div>
+                                <div class="desc">短周期在下、长周期在上 → 强势下跌</div>
+                            </div>
+                            <span class="signal-sell" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">🔴 弱势</span>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">🔀</div>
+                            <div class="signal-text">
+                                <div class="name">均线金叉</div>
+                                <div class="desc">短周期上穿长周期</div>
+                            </div>
+                            <span class="signal-buy" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">🟢 买入</span>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">🔀</div>
+                            <div class="signal-text">
+                                <div class="name">均线死叉</div>
+                                <div class="desc">短周期下穿长周期</div>
+                            </div>
+                            <span class="signal-sell" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">🔴 卖出</span>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">🔗</div>
+                            <div class="signal-text">
+                                <div class="name">均线粘合</div>
+                                <div class="desc">多周期汇聚</div>
+                            </div>
+                            <span class="signal-warn" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">⏳ 蓄势</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MACD -->
+                <div class="indicator-section">
+                    <div class="indicator-header">
+                        <span class="indicator-badge" style="background: linear-gradient(135deg, #00d26a, #34d399);">MACD</span>
+                        <span class="indicator-name">MACD指标</span>
+                        <span class="indicator-alias">—— 趋势研判</span>
+                    </div>
+
+                    <div class="macd-formula">
+                        <div><span class="label">MACD</span><span class="value">= DIF线 - DEA线</span></div>
+                        <div><span class="label">DIF</span><span class="value">= 12日EMA - 26日EMA</span></div>
+                        <div><span class="label">DEA</span><span class="value">= DIF的9日加权移动平均</span></div>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">MACD实战用法：</p>
+                    <table>
+                        <tr>
+                            <th>信号</th>
+                            <th>形态</th>
+                            <th>含义</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr>
+                            <td><strong>金叉</strong></td>
+                            <td>DIF上穿DEA</td>
+                            <td>多方占优</td>
+                            <td><span class="tag-green">🟢 买入</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>死叉</strong></td>
+                            <td>DIF下穿DEA</td>
+                            <td>空方占优</td>
+                            <td><span class="tag-red">🔴 卖出</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>零轴上方</strong></td>
+                            <td>DIF>DEA</td>
+                            <td>牛市格局</td>
+                            <td><span class="tag-blue">逢低买入</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>零轴下方</strong></td>
+                            <td>DIF<DEA</td>
+                            <td>熊市格局</td>
+                            <td><span class="tag-red">逢高卖出</span></td>
+                        </tr>
+                    </table>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin: 20px 0 12px;">高级用法 —— 背离：</p>
+                    <div class="signal-list">
+                        <div class="signal-item">
+                            <div class="signal-icon">⬆️</div>
+                            <div class="signal-text">
+                                <div class="name">顶背离</div>
+                                <div class="desc">股价创新高，但MACD没创新高</div>
+                            </div>
+                            <span class="signal-warn" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">⚠️ 警惕回落</span>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">⬇️</div>
+                            <div class="signal-text">
+                                <div class="name">底背离</div>
+                                <div class="desc">股价创新低，但MACD没创新低</div>
+                            </div>
+                            <span class="signal-watch" style="padding: 6px 12px; border-radius: 6px; font-size: 12px;">🔔 关注反弹</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KDJ -->
+                <div class="indicator-section">
+                    <div class="indicator-header">
+                        <span class="indicator-badge" style="background: linear-gradient(135deg, #a855f7, #c084fc);">KDJ</span>
+                        <span class="indicator-name">KDJ指标</span>
+                        <span class="indicator-alias">—— 超买超卖</span>
+                    </div>
+                    <p>KDJ构成：K值（快速随机）、D值（平滑平均）、J值（3K-2D，波动最敏感）</p>
+
+                    <div class="kdj-bands">
+                        <div class="kdj-band">
+                            <div class="range green">>80</div>
+                            <div class="label">超买区</div>
+                            <div class="action" style="background: rgba(255,71,87,0.15); color: var(--accent-red);">🔴 考虑卖出</div>
+                        </div>
+                        <div class="kdj-band">
+                            <div class="range yellow">20-80</div>
+                            <div class="label">中性区</div>
+                            <div class="action" style="background: rgba(52,120,246,0.15); color: #5a9cf8;">👀 观望</div>
+                        </div>
+                        <div class="kdj-band">
+                            <div class="range green"><20</div>
+                            <div class="label">超卖区</div>
+                            <div class="action" style="background: rgba(0,210,106,0.15); color: var(--accent-green);">🟢 关注买入</div>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">金叉死叉：</p>
+                    <div class="signal-list">
+                        <div class="signal-item">
+                            <div class="signal-icon">🟢</div>
+                            <div class="signal-text">
+                                <div class="name">KDJ金叉（K上穿D）+ 在20附近</div>
+                                <div class="desc">较强的买入信号</div>
+                            </div>
+                        </div>
+                        <div class="signal-item">
+                            <div class="signal-icon">🔴</div>
+                            <div class="signal-text">
+                                <div class="name">KDJ死叉（K下穿D）+ 在80附近</div>
+                                <div class="desc">较强的卖出信号</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 布林带 -->
+                <div class="indicator-section">
+                    <div class="indicator-header">
+                        <span class="indicator-badge" style="background: linear-gradient(135deg, #ec4899, #f472b6);">BBAND</span>
+                        <span class="indicator-name">布林带</span>
+                        <span class="indicator-alias">—— 波动通道</span>
+                    </div>
+
+                    <div class="bollinger-diagram">
+                        <div class="bollinger-labels">
+                            <span class="upper">⬆️ 上轨（压力位）</span>
+                            <span class="mid">📊 中轨（MA20趋势线）</span>
+                            <span class="lower">⬇️ 下轨（支撑位）</span>
+                        </div>
+                        <div class="bollinger-bands"></div>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">实战用法：</p>
+                    <table>
+                        <tr>
+                            <th>形态</th>
+                            <th>含义</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr>
+                            <td>股价触及上轨</td>
+                            <td>接近压力</td>
+                            <td><span class="tag-red">🔴 谨慎/卖出</span></td>
+                        </tr>
+                        <tr>
+                            <td>股价触及下轨</td>
+                            <td>接近支撑</td>
+                            <td><span class="tag-green">🟢 关注买入</span></td>
+                        </tr>
+                        <tr>
+                            <td>布林带收口</td>
+                            <td>行情蓄势</td>
+                            <td><span class="tag-blue">⏳ 等待突破</span></td>
+                        </tr>
+                        <tr>
+                            <td>布林带开口</td>
+                            <td>行情加速</td>
+                            <td><span class="tag-green">📈 顺势而为</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 成交量 -->
+                <div class="indicator-section">
+                    <div class="indicator-header">
+                        <span class="indicator-badge" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">VOL</span>
+                        <span class="indicator-name">成交量</span>
+                        <span class="indicator-alias">—— 量先于价</span>
+                    </div>
+
+                    <div class="highlight-box">
+                        <div class="title">💡 核心原则</div>
+                        <p style="margin: 0;">"量为价先"是技术分析的核心原则</p>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">量价配合八律：</p>
+                    <div class="volume-grid">
+                        <div class="volume-item up">
+                            <div class="title">📈 放量上涨</div>
+                            <div class="signal">资金涌入</div>
+                            <div class="action action-green">🟢 持股待涨</div>
+                        </div>
+                        <div class="volume-item up">
+                            <div class="title">📉 缩量上涨</div>
+                            <div class="signal">动能不足</div>
+                            <div class="action action-warn">⚠️ 警惕回调</div>
+                        </div>
+                        <div class="volume-item down">
+                            <div class="title">📈 放量下跌</div>
+                            <div class="signal">恐慌抛售</div>
+                            <div class="action action-warn">⚠️ 谨慎观望</div>
+                        </div>
+                        <div class="volume-item down">
+                            <div class="title">📉 缩量下跌</div>
+                            <div class="signal">抛压减轻</div>
+                            <div class="action action-green">🔔 底部信号</div>
+                        </div>
+                        <div class="volume-item up">
+                            <div class="title">📈 放量突破</div>
+                            <div class="signal">真突破</div>
+                            <div class="action action-green">🟢 顺势买入</div>
+                        </div>
+                        <div class="volume-item down">
+                            <div class="title">📉 缩量突破</div>
+                            <div class="signal">假突破</div>
+                            <div class="action action-red">🔴 警惕陷阱</div>
+                        </div>
+                        <div class="volume-item down">
+                            <div class="title">📉 地量见地价</div>
+                            <div class="signal">极度缩量</div>
+                            <div class="action action-green">🔔 底部区域</div>
+                        </div>
+                        <div class="volume-item up">
+                            <div class="title">📈 天量见天价</div>
+                            <div class="signal">极度放量</div>
+                            <div class="action action-red">🔴 警惕顶部</div>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-primary); font-weight: 600; margin: 24px 0 12px;">换手率参考：</p>
+                    <div class="price-info">
+                        <div class="price-item">
+                            <span class="label">1-3%</span>
+                            <span class="value">交易正常</span>
+                        </div>
+                        <div class="price-item">
+                            <span class="label">3-5%</span>
+                            <span class="value">较为活跃</span>
+                        </div>
+                        <div class="price-item">
+                            <span class="label">5-10%</span>
+                            <span class="value">高度活跃</span>
+                        </div>
+                        <div class="price-item">
+                            <span class="label">>10%</span>
+                            <span class="value" style="color: var(--accent-red);">异常活跃，警惕风险</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 五、基本面分析基础 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">💼</div>
+                    <div class="section-title">五、基本面分析基础</div>
+                </div>
+
+                <h3>5.1 核心财务指标</h3>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 12px;">📊 估值类：</p>
+                <table>
+                    <tr>
+                        <th>指标</th>
+                        <th>计算公式</th>
+                        <th>解读</th>
+                    </tr>
+                    <tr>
+                        <td><strong>PE（市盈率）</strong></td>
+                        <td>股价/每股收益</td>
+                        <td>越低越便宜，<span class="tag-blue"><15为合理</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>PB（市净率）</strong></td>
+                        <td>股价/每股净资产</td>
+                        <td>越低越有价值，<span class="tag-green"><1为破净</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>PS（市销率）</strong></td>
+                        <td>股价/每股销售额</td>
+                        <td>适合亏损公司，<span class="tag-blue"><3为合理</span></td>
+                    </tr>
+                </table>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin: 20px 0 12px;">💰 盈利类：</p>
+                <table>
+                    <tr>
+                        <th>指标</th>
+                        <th>解读</th>
+                    </tr>
+                    <tr>
+                        <td>净利润增长率</td>
+                        <td>>20%为<span class="tag-green">高增长</span>，<0需<span class="tag-red">警惕</span></td>
+                    </tr>
+                    <tr>
+                        <td>毛利率</td>
+                        <td>>30%说明<span class="tag-green">竞争力强</span></td>
+                    </tr>
+                    <tr>
+                        <td>ROE（净资产收益率）</td>
+                        <td>>15%为<span class="tag-green">优秀</span></td>
+                    </tr>
+                </table>
+
+                <div class="highlight-box warning" style="margin-top: 20px;">
+                    <div class="title">⚠️ 财务排雷</div>
+                    <ul style="margin: 0;">
+                        <li>应收账款异常增长</li>
+                        <li>存货周转天数大幅增加</li>
+                        <li>经营活动现金流持续为负</li>
+                        <li>资产负债率超过70%</li>
+                    </ul>
+                </div>
+
+                <h3>5.2 估值方法</h3>
+                <p><strong>相对估值法：</strong>与行业平均PE/PB对比、与历史平均估值对比</p>
+                <p><strong>绝对估值法（DCF）：</strong>预测未来现金流 → 折现到现值 → 适合稳健投资者</p>
+
+                <div class="highlight-box" style="margin-top: 16px;">
+                    <div class="title">📐 PEG估值法</div>
+                    <pre style="margin: 0; background: transparent; border: none; padding: 0;">PEG = PE / 净利润增长率
+
+PEG < 1：相对低估
+PEG = 1：合理估值
+PEG > 1：相对高估</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 六、趋势分析与支撑压力 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📊</div>
+                    <div class="section-title">六、趋势分析与支撑压力</div>
+                </div>
+
+                <h3>6.1 三种趋势</h3>
+                <table>
+                    <tr>
+                        <th>趋势</th>
+                        <th>特征</th>
+                        <th>操作策略</th>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-green">📈 上升趋势</span></td>
+                        <td>高点不断抬高，低点不断抬高</td>
+                        <td>逢低买入，顺势而为</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-red">📉 下降趋势</span></td>
+                        <td>高点不断降低，低点不断降低</td>
+                        <td>逢高卖出，轻仓观望</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-blue">➡️ 横盘震荡</span></td>
+                        <td>高低点基本持平</td>
+                        <td>高抛低吸，快进快出</td>
+                    </tr>
+                </table>
+
+                <h3>6.2 支撑与压力</h3>
+                <div class="signal-list">
+                    <div class="signal-item">
+                        <div class="signal-icon">🟢</div>
+                        <div class="signal-text">
+                            <div class="name">支撑位</div>
+                            <div class="desc">股价下跌时遇到买盘支撑的区域</div>
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-icon">🔴</div>
+                        <div class="signal-text">
+                            <div class="name">压力位</div>
+                            <div class="desc">股价上涨时遇到卖盘压力的区域</div>
+                        </div>
+                    </div>
+                    <div class="signal-item">
+                        <div class="signal-icon">🔄</div>
+                        <div class="signal-text">
+                            <div class="name">角色转换</div>
+                            <div class="desc">支撑跌破变压力，压力突破变支撑</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin: 20px 0 12px;">识别支撑压力的方法：</p>
+                <ol>
+                    <li><strong>前期高低点</strong></li>
+                    <li><strong>均线位置</strong>（MA20、MA60）</li>
+                    <li><strong>成交密集区</strong></li>
+                    <li><strong>整数关口</strong>（3000点、3500点等）</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 七、风险控制 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <div class="section-title">七、风险控制</div>
+                    <span class="section-tag" style="background: linear-gradient(135deg, var(--accent-red), #ff6b7a);">关键！</span>
+                </div>
+
+                <div class="highlight-box" style="background: linear-gradient(135deg, rgba(240, 185, 11, 0.15), rgba(240, 185, 11, 0.05)); border-color: rgba(240, 185, 11, 0.3);">
+                    <div class="title" style="color: var(--accent-gold);">🎯 风险控制是长期生存的核心！</div>
+                </div>
+
+                <h3>7.1 止损原则</h3>
+                <table>
+                    <tr>
+                        <th>方法</th>
+                        <th>说明</th>
+                        <th>适用</th>
+                    </tr>
+                    <tr>
+                        <td>固定止损</td>
+                        <td>亏损X%无条件卖出</td>
+                        <td><span class="tag-blue">短线操作</span></td>
+                    </tr>
+                    <tr>
+                        <td>移动止损</td>
+                        <td>随价格上涨提高止损线</td>
+                        <td><span class="tag-green">波段操作</span></td>
+                    </tr>
+                    <tr>
+                        <td>逻辑止损</td>
+                        <td>买入逻辑消失即卖出</td>
+                        <td><span class="tag-blue">趋势交易</span></td>
+                    </tr>
+                </table>
+
+                <div class="price-info" style="margin-top: 16px;">
+                    <div class="price-item">
+                        <span class="label">短线止损</span>
+                        <span class="value" style="color: var(--accent-gold);">7-10%</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="label">中线止损</span>
+                        <span class="value" style="color: var(--accent-gold);">10-15%</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="label">长线止损</span>
+                        <span class="value" style="color: var(--accent-gold);">20%</span>
+                    </div>
+                </div>
+
+                <h3>7.2 仓位管理</h3>
+                <table>
+                    <tr>
+                        <th>仓位</th>
+                        <th>操作</th>
+                        <th>适用场景</th>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-green">满仓</span></td>
+                        <td>100%资金买入</td>
+                        <td>确定性极高</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-green">重仓</span></td>
+                        <td>60-80%</td>
+                        <td>明显趋势</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-blue">半仓</span></td>
+                        <td>50%</td>
+                        <td>震荡行情</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-blue">轻仓</span></td>
+                        <td>20-30%</td>
+                        <td>谨慎观望</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag-red">空仓</span></td>
+                        <td>0%</td>
+                        <td>行情不明</td>
+                    </tr>
+                </table>
+
+                <div class="highlight-box" style="margin: 20px 0;">
+                    <div class="title">📝 仓位口诀</div>
+                    <p style="margin: 0; font-size: 16px; text-align: center; color: var(--accent-gold);">"不该满仓时不满仓，不该空仓时不满仓"</p>
+                </div>
+
+                <h3>7.3 交易纪律</h3>
+
+                <p style="color: var(--accent-green); font-weight: 600; margin-bottom: 12px;">✅ 应该做的：</p>
+                <ul>
+                    <li>制定交易计划，按计划执行</li>
+                    <li>顺势而为，不要逆势操作</li>
+                    <li>分散投资，不要单押一只</li>
+                    <li>保留现金，永不满仓</li>
+                    <li>记录交易，总结复盘</li>
+                </ul>
+
+                <p style="color: var(--accent-red); font-weight: 600; margin: 20px 0 12px;">❌ 不应该做的：</p>
+                <ul>
+                    <li>不要追涨杀跌</li>
+                    <li>不要频繁交易</li>
+                    <li>不要重仓单一股票</li>
+                    <li>不要忽视止损</li>
+                    <li>不要情绪化交易</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 八、常见术语速查表 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <div class="section-title">八、常见术语速查表</div>
+                </div>
+
+                <h3>基础术语</h3>
+                <div class="term-grid">
+                    <div class="term-item">
+                        <span class="term">牛市</span>
+                        <span class="mean">股价整体上涨（标普涨20%+进入牛市）</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">熊市</span>
+                        <span class="mean">股价整体下跌（标普跌20%+进入熊市）</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">震荡市</span>
+                        <span class="mean">股价在一定区间内反复波动</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">涨停</span>
+                        <span class="mean">A股当日涨幅达到10%上限</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">跌停</span>
+                        <span class="mean">A股当日跌幅达到10%下限</span>
+                    </div>
+                </div>
+
+                <h3>交易术语</h3>
+                <div class="term-grid">
+                    <div class="term-item">
+                        <span class="term">建仓</span>
+                        <span class="mean">开始买入股票</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">加仓</span>
+                        <span class="mean">买入更多同一只股票</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">减仓</span>
+                        <span class="mean">卖出一部分股票</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">清仓</span>
+                        <span class="mean">卖出全部股票</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">补仓</span>
+                        <span class="mean">被套后低价买入摊薄成本</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">割肉</span>
+                        <span class="mean">亏损卖出（中性词）</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">追高</span>
+                        <span class="mean">在高位买入（不推荐）</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">抄底</span>
+                        <span class="mean">在低位买入（难度高）</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">踏空</span>
+                        <span class="mean">行情上涨但没买入</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">套牢</span>
+                        <span class="mean">买入后股价下跌亏损</span>
+                    </div>
+                </div>
+
+                <h3>技术术语</h3>
+                <div class="term-grid">
+                    <div class="term-item">
+                        <span class="term">突破</span>
+                        <span class="mean">股价向上穿越压力位</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">跌破</span>
+                        <span class="mean">股价向下穿越支撑位</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">回踩</span>
+                        <span class="mean">突破后回落测试支撑</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">企稳</span>
+                        <span class="mean">下跌后开始横盘整理</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">筑底</span>
+                        <span class="mean">在低位逐步形成底部</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">诱多</span>
+                        <span class="mean">主力故意拉高引诱买入</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">诱空</span>
+                        <span class="mean">主力故意打压逼出散户</span>
+                    </div>
+                </div>
+
+                <h3>资金术语</h3>
+                <div class="term-grid">
+                    <div class="term-item">
+                        <span class="term">北向资金</span>
+                        <span class="mean">港资通过沪港通买入A股</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">南向资金</span>
+                        <span class="mean">A股资金买入港股</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">主力/庄家</span>
+                        <span class="mean">能影响股价的大资金</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">散户</span>
+                        <span class="mean">个人投资者</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term">杠杆资金</span>
+                        <span class="mean">融资借来的钱</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 九、实用工具推荐 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">🛠️</div>
+                    <div class="section-title">九、实用工具推荐</div>
+                </div>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px;">📱 行情软件</p>
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <div class="name">同花顺</div>
+                        <div class="desc">功能全面，适合新手</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">东方财富</div>
+                        <div class="desc">资讯丰富</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">通达信</div>
+                        <div class="desc">技术分析强大</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">雪球</div>
+                        <div class="desc">投资社区+行情</div>
+                    </div>
+                </div>
+
+                <p style="color: var(--text-primary); font-weight: 600; margin: 24px 0 16px;">🌐 数据网站</p>
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <div class="name">东方财富网</div>
+                        <div class="desc">www.eastmoney.com</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">同花顺</div>
+                        <div class="desc">www.10jqka.com.cn</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">理杏仁</div>
+                        <div class="desc">www.lexinchina.com（财务数据）</div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="name">巨潮资讯</div>
+                        <div class="desc">www.cninfo.com.cn（官方公告）</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 十、学习路径建议 -->
+        <div class="section">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">🗺️</div>
+                    <div class="section-title">十、学习路径建议</div>
+                </div>
+
+                <div class="learning-path">
+                    <div class="path-item">
+                        <div class="phase">👶 新手入门（3个月）</div>
+                        <div class="title">掌握基础概念</div>
+                        <ul>
+                            <li>理解基本概念和术语</li>
+                            <li>学会看K线和均线</li>
+                            <li>了解量价关系</li>
+                            <li>模拟盘练习</li>
+                        </ul>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="phase">🚀 进阶提升（6-12个月）</div>
+                        <div class="title">深入技术分析</div>
+                        <ul>
+                            <li>深入学习MACD、KDJ等指标</li>
+                            <li>理解趋势和支撑压力</li>
+                            <li>建立自己的交易系统</li>
+                            <li>小资金实盘验证</li>
+                        </ul>
+                    </div>
+
+                    <div class="path-item">
+                        <div class="phase">🏆 形成体系（1-2年）</div>
+                        <div class="title">形成稳定体系</div>
+                        <ul>
+                            <li>完善交易系统</li>
+                            <li>做好风险控制</li>
+                            <li>保持交易纪律</li>
+                            <li>持续学习总结</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <div class="icon">💰</div>
+            <div class="title">祝您投资顺利，稳健盈利！</div>
+            <div class="desc">本文档综合了股票投资的核心知识，涵盖技术分析、基本面分析、风险控制等方面。</div>
+            <div class="warning">⚠️ 重要提示：投资有风险，入市需谨慎！本文档仅供参考，不构成任何投资建议。</div>
+            <div class="author">嘻嘻 📊</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,20 +1,23 @@
 // background.js - 后台脚本，处理翻译和存储
+console.log('Background script loaded');
 
 // 获取配置
 async function getConfig() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['openaiApiKey', 'model'], (items) => {
+    chrome.storage.sync.get(['apiKey', 'model'], (items) => {
       resolve({
-        apiKey: items.openaiApiKey || '',
-        model: items.model || 'gpt-4o-mini'
+        apiKey: items.apiKey || '',
+        model: items.model || 'MiniMax-M2.7'
       });
     });
   });
 }
 
-// 调用 OpenAI API 翻译
+// 调用 MiniMax API 翻译
 async function translateText(text, apiKey, model) {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  console.log('开始翻译:', text);
+
+  const response = await fetch('https://api.minimaxi.com/v1/text/chatcompletion_v2', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,6 +25,7 @@ async function translateText(text, apiKey, model) {
     },
     body: JSON.stringify({
       model: model,
+      stream: false,
       messages: [
         {
           role: 'system',
@@ -35,13 +39,25 @@ async function translateText(text, apiKey, model) {
     })
   });
 
+  console.log('响应状态:', response.status);
+
   if (!response.ok) {
     const error = await response.json();
+    console.log('错误响应:', error);
     throw new Error(error.error?.message || 'API请求失败');
   }
 
   const data = await response.json();
-  return data.choices[0].message.content.trim();
+  console.log('完整响应:', JSON.stringify(data));
+
+  // MiniMax 响应格式可能是 choices[0].message.content 或 choices[0].delta.content
+  const content = data.choices?.[0]?.message?.content
+    || data.choices?.[0]?.delta?.content
+    || data.choices?.[0]?.content
+    || data.text
+    || JSON.stringify(data);
+
+  return content.trim();
 }
 
 // 获取单词本
@@ -95,27 +111,33 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       const config = await getConfig();
 
       if (!config.apiKey) {
-        chrome.runtime.sendMessage(tabId, {
-          type: 'TRANSLATION_ERROR',
-          data: '请先配置API Key'
-        });
+        if (tabId) {
+          chrome.tabs.sendMessage(tabId, {
+            type: 'TRANSLATION_ERROR',
+            data: '请先配置API Key'
+          });
+        }
         return;
       }
 
       const translation = await translateText(message.data.text, config.apiKey, config.model);
 
-      chrome.runtime.sendMessage(tabId, {
-        type: 'TRANSLATION_RESULT',
-        data: {
-          translation: translation,
-          original: message.data.text
-        }
-      });
+      if (tabId) {
+        chrome.tabs.sendMessage(tabId, {
+          type: 'TRANSLATION_RESULT',
+          data: {
+            translation: translation,
+            original: message.data.text
+          }
+        });
+      }
     } catch (error) {
-      chrome.runtime.sendMessage(tabId, {
-        type: 'TRANSLATION_ERROR',
-        data: error.message
-      });
+      if (tabId) {
+        chrome.tabs.sendMessage(tabId, {
+          type: 'TRANSLATION_ERROR',
+          data: error.message
+        });
+      }
     }
   }
 

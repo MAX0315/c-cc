@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 加载设置
 function loadSettings() {
-  chrome.storage.sync.get(['openaiApiKey', 'model'], (items) => {
-    document.getElementById('api-key').value = items.openaiApiKey || '';
-    document.getElementById('model').value = items.model || 'gpt-4o-mini';
+  chrome.storage.sync.get(['apiKey', 'model'], (items) => {
+    document.getElementById('api-key').value = items.apiKey || '';
+    document.getElementById('model').value = items.model || 'MiniMax-M2.7';
   });
 }
 
@@ -72,7 +72,7 @@ function setupSaveButton() {
     const apiKey = document.getElementById('api-key').value.trim();
     const model = document.getElementById('model').value;
 
-    chrome.storage.sync.set({ openaiApiKey: apiKey, model }, () => {
+    chrome.storage.sync.set({ apiKey: apiKey, model }, () => {
       status.textContent = '设置已保存 ✓';
       setTimeout(() => { status.textContent = ''; }, 2000);
     });
