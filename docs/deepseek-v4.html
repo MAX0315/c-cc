@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek V4 深度解读</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.7; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 2em; color: #58a6ff; margin-bottom: 10px; }
+        h2 { font-size: 1.4em; color: #f78166; margin: 30px 0 15px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
+        h3 { font-size: 1.1em; color: #8b949e; margin: 20px 0 10px; }
+        .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 20px; }
+        p { margin: 10px 0; }
+        ul { padding-left: 25px; margin: 10px 0; }
+        li { margin: 5px 0; }
+        .tag { display: inline-block; background: #238636; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
+        .highlight { background: #1a6b2a; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #238636; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #30363d; padding: 10px; text-align: left; }
+        th { background: #161b22; color: #58a6ff; }
+        code { background: #161b22; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; }
+        a { color: #58a6ff; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 DeepSeek V4 深度解读</h1>
+        <div class="meta">
+            <span>📺 视频来源：<a href="https://www.youtube.com/watch?v=WDQjRzVcX-A">YouTube - 林亦LYi</a></span> |
+            <span>📅 发布日期：2026年4月24日</span>
+        </div>
+        <div style="margin: 15px 0;">
+            <span class="tag">MoE架构</span>
+            <span class="tag">100万token上下文</span>
+            <span class="tag">MIT开源</span>
+            <span class="tag">1.6万亿参数</span>
+        </div>
+
+        <div class="highlight">
+            <strong>💡 核心要点</strong><br>
+            • 1.6万亿总参数量，激活490亿参数<br>
+            • 100万token上下文，仅需27%推理FLOPs<br>
+            • 输出价格约为Claude Opus 4.7的1/7<br>
+            • MIT开源许可，支持商业使用
+        </div>
+
+        <h2>一、发布概况</h2>
+        <p>DeepSeek V4 于 2026年4月24日 发布，包含两款模型：</p>
+        <ul>
+            <li><strong>DeepSeek-V4-Pro</strong>：1.6万亿参数，激活490亿参数，100万token上下文</li>
+            <li><strong>DeepSeek-V4-Flash</strong>：2840亿参数，激活130亿参数，100万token上下文</li>
+        </ul>
+        <p>两款模型均采用 <strong>MIT 开源许可证</strong>，支持商业使用。</p>
+
+        <h2>二、核心架构创新</h2>
+        <h3>混合注意力架构</h3>
+        <ul>
+            <li><strong>CSA (压缩稀疏注意力)</strong>：稀疏模式，减少计算量</li>
+            <li><strong>HCA (重度压缩注意力)</strong>：高度压缩，最大化效率</li>
+        </ul>
+        <p>在100万token上下文场景下，V4-Pro仅需 <strong>27%</strong> 单token推理FLOPs，<strong>10%</strong> KV Cache。</p>
+
+        <h3>mHC 流形约束超连接</h3>
+        <ul>
+            <li>强化传统残差连接</li>
+            <li>保持模型表达能力</li>
+            <li>增强跨层级信号传播稳定性</li>
+        </ul>
+
+        <h3>技术亮点</h3>
+        <ul>
+            <li><strong>Muon优化器</strong>：更快的收敛速度和更高的训练稳定性</li>
+            <li><strong>训练数据</strong>：超过32万亿(32T) tokens</li>
+            <li><strong>混合精度</strong>：MoE专家使用FP4，其他使用FP8</li>
+        </ul>
+
+        <h2>三、主要技术特性</h2>
+        <h3>百万token上下文窗口</h3>
+        <p>DeepSeek V4 支持100万token的上下文窗口，理论上可容纳：</p>
+        <ul>
+            <li>15-20部完整小说</li>
+            <li>500+文件的代码库</li>
+            <li>数年的对话历史</li>
+            <li>完整的法律发现文档集</li>
+        </ul>
+
+        <h3>可配置推理深度</h3>
+        <table>
+            <tr><th>推理模式</th><th>特点</th><th>适用场景</th></tr>
+            <tr><td><strong>Non-think</strong></td><td>快速、直观、低延迟</td><td>简单聊天、常规任务</td></tr>
+            <tr><td><strong>Think High</strong></td><td>逻辑分析、中等延迟</td><td>复杂问题求解、规划、编程</td></tr>
+            <tr><td><strong>Think Max</strong></td><td>最大推理深度</td><td>高难度agent任务、极限逻辑</td></tr>
+        </table>
+        <p>输出格式通过 <code>[think]</code> 和 <code>[summary]</code> 标签区分。</p>
+
+        <h2>四、性能表现</h2>
+        <h3>基准测试成绩</h3>
+        <table>
+            <tr><th>基准测试</th><th>DeepSeek-V4-Pro</th><th>对比</th></tr>
+            <tr><td>MMLU</td><td>90.1%</td><td>超越GPT-5.4</td></tr>
+            <tr><td>LiveCodeBench</td><td>93.5%</td><td>排名第一</td></tr>
+            <tr><td>Codeforces</td><td>3206分</td><td>顶级竞赛水平</td></tr>
+            <tr><td>SWE Verified</td><td>80.6%</td><td>开源第一</td></tr>
+        </table>
+
+        <h3>成本对比</h3>
+        <table>
+            <tr><th>模型</th><th>输出价格</th></tr>
+            <tr><td>DeepSeek V4-Pro</td><td>$3.48/百万tokens</td></tr>
+            <tr><td>Claude Opus 4.7</td><td>$25/百万tokens</td></tr>
+        </table>
+        <p>V4-Pro输出价格约为Claude Opus 4.7的 <strong>1/7</strong></p>
+
+        <h2>五、硬件与部署</h2>
+        <p><strong>训练硬件</strong>：华为昇腾910B (Huawei Ascend 910B) 和寒武纪MLU (Cambricon MLU)，未使用Nvidia硬件。这展示了在受出口限制情况下中国AI公司的技术突破。</p>
+
+        <h3>本地运行硬件需求</h3>
+        <table>
+            <tr><th>精度</th><th>硬件要求</th></tr>
+            <tr><td>FP16/BF16</td><td>多节点GPU集群</td></tr>
+            <tr><td>INT8</td><td>2x RTX 4090 (共48GB VRAM)</td></tr>
+            <tr><td>INT4</td><td>1x RTX 5090 (32GB VRAM)</td></tr>
+        </table>
+
+        <h2>六、相关链接</h2>
+        <ul>
+            <li><a href="https://www.youtube.com/watch?v=WDQjRzVcX-A">▶️ YouTube视频</a></li>
+            <li><a href="https://github.com/MAX0315/c-cc/tree/main/DeepSeek_V4_笔记">📂 GitHub仓库</a></li>
+            <li><a href="https://feishu.cn/docx/Q0OPdtcT0omyo2xXAr4cP4EEnvb">📄 飞书文档</a></li>
+        </ul>
+
+        <div class="footer">
+            <p>整理自林亦LYi视频 | 最后更新：2026-05-15</p>
+        </div>
+    </div>
+</body>
+</html>
