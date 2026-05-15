@@ -6,374 +6,490 @@
     <title>DeepSeek V4 深度解读</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #030712;
-            --bg-secondary: #0a1628;
-            --bg-card: rgba(15, 30, 60, 0.6);
-            --accent-cyan: #22d3ee;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
-            --accent-orange: #f97316;
-            --text-primary: #f1f5f9;
+            --bg-deep: #050810;
+            --bg-card: rgba(12, 18, 35, 0.85);
+            --accent-violet: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-pink: #ec4899;
+            --accent-amber: #f59e0b;
+            --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: rgba(148, 163, 184, 0.1);
-            --glow-cyan: rgba(34, 211, 238, 0.15);
-            --glow-blue: rgba(59, 130, 246, 0.15);
+            --text-muted: #475569;
+            --border: rgba(139, 92, 246, 0.15);
+            --glow-violet: rgba(139, 92, 246, 0.2);
+            --glow-cyan: rgba(6, 182, 212, 0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-deep);
             color: var(--text-primary);
-            line-height: 1.8;
+            line-height: 1.85;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Animated mesh background */
-        .bg-mesh {
+        /* Aurora background */
+        .aurora-bg {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, var(--glow-cyan), transparent),
-                radial-gradient(ellipse 60% 40% at 90% 10%, var(--glow-blue), transparent),
-                radial-gradient(ellipse 50% 30% at 10% 90%, rgba(168, 85, 247, 0.08), transparent);
+                linear-gradient(180deg,
+                    rgba(139, 92, 246, 0.08) 0%,
+                    transparent 30%,
+                    transparent 50%,
+                    rgba(6, 182, 212, 0.05) 70%,
+                    rgba(236, 72, 153, 0.03) 100%
+                );
             pointer-events: none;
             z-index: 0;
+            animation: auroraShift 20s ease-in-out infinite alternate;
         }
 
-        /* Grid overlay */
-        .grid-overlay {
+        @keyframes auroraShift {
+            0% { opacity: 0.6; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(-20px); }
+            100% { opacity: 0.6; transform: translateY(0); }
+        }
+
+        /* Particle canvas */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-image:
-                linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
             pointer-events: none;
             z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+            25% { transform: translateY(-100px) translateX(20px); opacity: 0.6; }
+            50% { transform: translateY(-200px) translateX(-10px); opacity: 0.3; }
+            75% { transform: translateY(-100px) translateX(15px); opacity: 0.5; }
         }
 
         .container {
             position: relative;
             z-index: 2;
-            max-width: 900px;
+            max-width: 920px;
             margin: 0 auto;
-            padding: 60px 24px 100px;
+            padding: 80px 24px 120px;
         }
 
-        /* Header */
-        .header {
+        /* Hero */
+        .hero {
             text-align: center;
-            margin-bottom: 70px;
-            animation: fadeInUp 0.8s ease-out;
+            padding: 60px 0 80px;
+            animation: heroReveal 1s ease-out;
         }
 
-        .header-badge {
+        @keyframes heroReveal {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-eyebrow {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(59, 130, 246, 0.15));
-            border: 1px solid rgba(34, 211, 238, 0.3);
-            padding: 6px 16px;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--glow-violet), var(--glow-cyan));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 10px 24px;
             border-radius: 100px;
+            font-family: 'Space Mono', monospace;
             font-size: 0.85rem;
-            color: var(--accent-cyan);
-            margin-bottom: 24px;
+            color: var(--accent-violet);
+            margin-bottom: 32px;
+            letter-spacing: 0.05em;
         }
 
-        .header-badge::before {
+        .hero-eyebrow::before {
             content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-cyan);
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: pulse-glow 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent-violet); }
+            50% { box-shadow: 0 0 25px var(--accent-cyan); }
         }
 
-        h1 {
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
+        .hero h1 {
+            font-size: clamp(2.8rem, 8vw, 5rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--accent-violet) 40%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .subtitle {
-            font-size: 1.1rem;
+        .hero-subtitle {
+            font-size: 1.25rem;
             color: var(--text-secondary);
             font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: 0.02em;
         }
 
-        /* Meta info bar */
-        .meta-bar {
+        /* Meta strip */
+        .meta-strip {
             display: flex;
             justify-content: center;
-            gap: 32px;
-            margin-top: 28px;
+            gap: 40px;
             flex-wrap: wrap;
+            margin-bottom: 40px;
         }
 
-        .meta-item {
+        .meta-pill {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-muted);
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s;
+        }
+
+        .meta-pill:hover {
+            border-color: var(--accent-violet);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .meta-pill-icon {
+            font-size: 1.1rem;
+        }
+
+        .meta-pill-text {
             font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .meta-item svg {
-            width: 18px;
-            height: 18px;
-            color: var(--accent-cyan);
-        }
-
-        .meta-item a {
+        .meta-pill-text a {
             color: var(--accent-cyan);
             text-decoration: none;
-            transition: opacity 0.2s;
         }
 
-        .meta-item a:hover { opacity: 0.8; }
-
-        /* Tags */
-        .tags {
+        /* Tags cloud */
+        .tags-cloud {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 24px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .tag {
-            background: rgba(34, 211, 238, 0.1);
-            border: 1px solid rgba(34, 211, 238, 0.2);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
+        .tag-chip {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(6, 182, 212, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 500;
+            color: var(--accent-violet);
             transition: all 0.3s;
         }
 
-        .tag:hover {
-            background: rgba(34, 211, 238, 0.2);
-            transform: translateY(-2px);
+        .tag-chip:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(6, 182, 212, 0.15));
+            transform: translateY(-2px) scale(1.02);
         }
 
-        /* Key highlights card */
-        .key-highlights {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 30, 60, 0.6));
-            border: 1px solid rgba(34, 211, 238, 0.2);
-            border-radius: 20px;
-            padding: 32px;
-            margin-bottom: 60px;
+        /* Hero highlight */
+        .hero-highlight {
+            max-width: 700px;
+            margin: 60px auto 0;
+            background: var(--bg-card);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            padding: 36px 40px;
             backdrop-filter: blur(20px);
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            animation: fadeUp 0.8s ease-out 0.3s both;
         }
 
-        .key-highlights h2 {
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-highlight-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
+            gap: 12px;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--accent-cyan);
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            font-family: 'Space Mono', monospace;
         }
 
-        .key-points {
+        .highlight-grid {
             display: grid;
-            gap: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
 
-        .key-point {
+        .highlight-item {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(34, 211, 238, 0.05);
-            border-radius: 10px;
-            border: 1px solid transparent;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 14px;
             transition: all 0.3s;
         }
 
-        .key-point:hover {
-            border-color: rgba(34, 211, 238, 0.2);
-            transform: translateX(4px);
+        .highlight-item:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: scale(1.02);
         }
 
-        .key-point-icon {
-            font-size: 1.2rem;
+        .highlight-icon {
+            font-size: 1.5rem;
             flex-shrink: 0;
         }
 
-        .key-point-text {
+        .highlight-text {
             font-size: 0.95rem;
             color: var(--text-primary);
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 50px;
-            animation: fadeInUp 0.6s ease-out both;
+        .highlight-text strong {
+            color: var(--accent-cyan);
         }
 
-        .section:nth-child(3) { animation-delay: 0.3s; }
-        .section:nth-child(4) { animation-delay: 0.4s; }
-        .section:nth-child(5) { animation-delay: 0.5s; }
+        /* Content sections */
+        .content-section {
+            margin-bottom: 70px;
+            animation: sectionReveal 0.7s ease-out both;
+        }
+
+        .content-section:nth-child(2) { animation-delay: 0.4s; }
+        .content-section:nth-child(3) { animation-delay: 0.5s; }
+        .content-section:nth-child(4) { animation-delay: 0.6s; }
+        .content-section:nth-child(5) { animation-delay: 0.7s; }
+
+        @keyframes sectionReveal {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 20px;
+            margin-bottom: 32px;
         }
 
-        .section-number {
+        .section-num {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-pink));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            border-radius: 10px;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.4rem;
             font-weight: 700;
-            font-size: 1rem;
-            color: var(--bg-primary);
+            color: #fff;
+            flex-shrink: 0;
         }
 
+        .section-info {}
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 600;
-            color: var(--text-primary);
+            margin-bottom: 4px;
         }
-
         .section-subtitle {
             font-size: 0.85rem;
             color: var(--text-muted);
-            margin-top: 4px;
+            font-family: 'Space Mono', monospace;
         }
 
-        /* Cards */
-        .card {
+        /* Data cards */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .data-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 18px;
+            padding: 24px 20px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .data-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .data-card:hover::before {
+            opacity: 1;
+        }
+
+        .data-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .data-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Info cards */
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 32px;
             margin-bottom: 20px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             transition: all 0.3s;
         }
 
-        .card:hover {
-            border-color: rgba(34, 211, 238, 0.2);
-            transform: translateY(-2px);
+        .info-card:hover {
+            border-color: rgba(139, 92, 246, 0.25);
+            transform: translateY(-4px);
         }
 
-        .card-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 14px;
+        .info-card-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 14px;
+            margin-bottom: 20px;
         }
 
-        .card-title::before {
-            content: '';
-            width: 4px;
-            height: 18px;
-            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
-            border-radius: 2px;
+        .info-card-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
         }
 
-        /* Lists */
+        .info-card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Feature list */
         .feature-list {
             list-style: none;
             display: grid;
-            gap: 10px;
+            gap: 12px;
         }
 
         .feature-list li {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-            font-size: 0.95rem;
-        }
-
-        .feature-list li::before {
-            content: '→';
-            color: var(--accent-cyan);
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(59, 130, 246, 0.05));
-            border: 1px solid rgba(34, 211, 238, 0.15);
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: rgba(139, 92, 246, 0.03);
+            border-radius: 12px;
+            border: 1px solid transparent;
             transition: all 0.3s;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px rgba(34, 211, 238, 0.1);
+        .feature-list li:hover {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.15);
         }
 
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent-cyan);
-            margin-bottom: 6px;
+        .feature-list li::before {
+            content: '◆';
+            color: var(--accent-violet);
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            margin-top: 4px;
         }
 
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        .feature-content {
+            flex: 1;
         }
 
-        /* Tables */
-        .table-wrapper {
+        .feature-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Table */
+        .table-container {
             overflow-x: auto;
-            margin: 20px 0;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border);
+            margin: 20px 0;
         }
 
         table {
@@ -382,278 +498,382 @@
             font-size: 0.9rem;
         }
 
+        thead {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.05));
+        }
+
         th {
-            background: rgba(34, 211, 238, 0.1);
-            padding: 14px 18px;
+            padding: 18px 20px;
             text-align: left;
             font-weight: 600;
-            color: var(--accent-cyan);
+            color: var(--accent-violet);
             border-bottom: 1px solid var(--border);
+            font-family: 'Space Mono', monospace;
         }
 
         td {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
             color: var(--text-secondary);
         }
 
         tr:last-child td { border-bottom: none; }
 
         tr:hover td {
-            background: rgba(34, 211, 238, 0.03);
+            background: rgba(139, 92, 246, 0.03);
         }
 
-        /* Code */
-        code {
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(34, 211, 238, 0.1);
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.85em;
+        .table-highlight {
             color: var(--accent-cyan);
+            font-weight: 600;
         }
 
         /* Callout */
-        .callout {
+        .callout-box {
             display: flex;
-            gap: 14px;
-            padding: 18px 20px;
-            background: rgba(249, 115, 22, 0.08);
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            border-radius: 12px;
-            margin: 20px 0;
+            gap: 16px;
+            padding: 22px 24px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(236, 72, 153, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            margin: 24px 0;
         }
 
-        .callout-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .callout-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
 
-        .callout-content {
-            font-size: 0.9rem;
+        .callout-text {
+            font-size: 0.95rem;
             color: var(--text-secondary);
             line-height: 1.7;
         }
 
-        /* Links section */
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
+        .callout-text strong {
+            color: var(--accent-amber);
         }
 
-        .link-card {
+        /* Code inline */
+        code {
+            font-family: 'Space Mono', monospace;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--accent-cyan);
+        }
+
+        /* Links row */
+        .links-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .link-tile {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
+            gap: 14px;
+            padding: 22px 24px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             color: var(--text-primary);
             text-decoration: none;
             transition: all 0.3s;
-            font-size: 0.9rem;
+            backdrop-filter: blur(15px);
         }
 
-        .link-card:hover {
-            border-color: var(--accent-cyan);
-            transform: translateX(4px);
+        .link-tile:hover {
+            border-color: var(--accent-violet);
+            transform: translateY(-4px) translateX(4px);
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.12);
         }
 
-        .link-card-icon {
-            font-size: 1.3rem;
+        .link-icon {
+            font-size: 1.5rem;
+        }
+
+        .link-label {
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         /* Footer */
         .footer {
-            margin-top: 80px;
-            padding-top: 30px;
+            margin-top: 100px;
+            padding-top: 40px;
             border-top: 1px solid var(--border);
             text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
         }
 
         /* Responsive */
-        @media (max-width: 640px) {
-            .container { padding: 40px 16px 80px; }
-            .meta-bar { gap: 16px; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .header h1 { font-size: 1.8rem; }
+        @media (max-width: 768px) {
+            .container { padding: 60px 16px 100px; }
+            .data-cards { grid-template-columns: repeat(2, 1fr); }
+            .highlight-grid { grid-template-columns: 1fr; }
+            .links-row { grid-template-columns: 1fr; }
+            .section-num { width: 48px; height: 48px; font-size: 1.2rem; }
+            .meta-strip { gap: 16px; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-violet), var(--accent-cyan));
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="bg-mesh"></div>
-    <div class="grid-overlay"></div>
+    <div class="aurora-bg"></div>
+    <div class="particles" id="particles"></div>
 
     <div class="container">
-        <header class="header">
-            <div class="header-badge">🧠 深度解读</div>
-            <h1>DeepSeek V4 深度解读</h1>
-            <p class="subtitle">一个视频搞懂 DeepSeek V4</p>
+        <header class="hero">
+            <div class="hero-eyebrow">DEEPSEEK V4</div>
+            <h1><span class="gradient-text">DeepSeek V4</span><br>深度解读</h1>
+            <p class="hero-subtitle">一个视频搞懂下一代AI大模型</p>
 
-            <div class="meta-bar">
-                <div class="meta-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-                    </svg>
-                    <a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" target="_blank">YouTube - 林亦LYi</a>
+            <div class="meta-strip">
+                <div class="meta-pill">
+                    <span class="meta-pill-icon">📺</span>
+                    <span class="meta-pill-text"><a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" target="_blank">YouTube - 林亦LYi</a></span>
                 </div>
-                <div class="meta-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    <span>2026年4月24日</span>
+                <div class="meta-pill">
+                    <span class="meta-pill-icon">📅</span>
+                    <span class="meta-pill-text">2026年4月24日</span>
+                </div>
+                <div class="meta-pill">
+                    <span class="meta-pill-icon">⏱️</span>
+                    <span class="meta-pill-text">深度解读</span>
                 </div>
             </div>
 
-            <div class="tags">
-                <span class="tag">MoE架构</span>
-                <span class="tag">100万token上下文</span>
-                <span class="tag">MIT开源</span>
-                <span class="tag">1.6万亿参数</span>
+            <div class="tags-cloud">
+                <span class="tag-chip">MoE架构</span>
+                <span class="tag-chip">100万token上下文</span>
+                <span class="tag-chip">MIT开源</span>
+                <span class="tag-chip">1.6万亿参数</span>
+                <span class="tag-chip">华为昇腾910B</span>
             </div>
         </header>
 
-        <section class="key-highlights">
-            <h2>💡 核心要点</h2>
-            <div class="key-points">
-                <div class="key-point">
-                    <span class="key-point-icon">⚡</span>
-                    <span class="key-point-text"><strong>1.6万亿</strong> 总参数量，激活490亿参数</span>
+        <section class="hero-highlight">
+            <div class="hero-highlight-title">💡 核心要点</div>
+            <div class="highlight-grid">
+                <div class="highlight-item">
+                    <span class="highlight-icon">⚡</span>
+                    <span class="highlight-text"><strong>1.6万亿</strong> 总参数量<br>激活490亿参数</span>
                 </div>
-                <div class="key-point">
-                    <span class="key-point-icon">📊</span>
-                    <span class="key-point-text"><strong>100万token</strong> 上下文，仅需27%推理FLOPs</span>
+                <div class="highlight-item">
+                    <span class="highlight-icon">📊</span>
+                    <span class="highlight-text"><strong>100万token</strong> 上下文<br>仅需27%推理FLOPs</span>
                 </div>
-                <div class="key-point">
-                    <span class="key-point-icon">💰</span>
-                    <span class="key-point-text">输出价格约为 Claude Opus 4.7 的 <strong>1/7</strong></span>
+                <div class="highlight-item">
+                    <span class="highlight-icon">💰</span>
+                    <span class="highlight-text">输出价格约为<br><strong>Claude Opus 4.7 的 1/7</strong></span>
                 </div>
-                <div class="key-point">
-                    <span class="key-point-icon">🔓</span>
-                    <span class="key-point-text"><strong>MIT开源</strong> 许可证，支持商业使用</span>
+                <div class="highlight-item">
+                    <span class="highlight-icon">🔓</span>
+                    <span class="highlight-text"><strong>MIT开源</strong> 许可证<br>支持商业使用</span>
                 </div>
             </div>
         </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">1</div>
-                <div>
+                <div class="section-num">1</div>
+                <div class="section-info">
                     <div class="section-title">发布概况</div>
                     <div class="section-subtitle">Model Lineup</div>
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">1.6T</div>
-                    <div class="stat-label">DeepSeek-V4-Pro 总参数量</div>
+            <div class="data-cards">
+                <div class="data-card">
+                    <div class="data-value">1.6T</div>
+                    <div class="data-label">V4-Pro 总参数量</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">284B</div>
-                    <div class="stat-label">DeepSeek-V4-Flash 总参数量</div>
+                <div class="data-card">
+                    <div class="data-value">284B</div>
+                    <div class="data-label">V4-Flash 总参数量</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">100万</div>
-                    <div class="stat-label">上下文窗口 tokens</div>
+                <div class="data-card">
+                    <div class="data-value">100万</div>
+                    <div class="data-label">上下文窗口 tokens</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">MIT</div>
-                    <div class="stat-label">开源许可证</div>
+                <div class="data-card">
+                    <div class="data-value">MIT</div>
+                    <div class="data-label">开源许可证</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">模型阵容</div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🏛️</div>
+                    <div class="info-card-title">模型阵容</div>
+                </div>
                 <ul class="feature-list">
-                    <li><strong>DeepSeek-V4-Pro</strong>：1.6万亿参数，激活490亿参数，100万token上下文</li>
-                    <li><strong>DeepSeek-V4-Flash</strong>：2840亿参数，激活130亿参数，100万token上下文</li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">DeepSeek-V4-Pro</div>
+                            <div class="feature-desc">1.6万亿参数，激活490亿参数，100万token上下文</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">DeepSeek-V4-Flash</div>
+                            <div class="feature-desc">2840亿参数，激活130亿参数，100万token上下文</div>
+                        </div>
+                    </li>
                 </ul>
+                <div class="callout-box">
+                    <span class="callout-icon">📢</span>
+                    <div class="callout-text">两款模型均采用 <strong>MIT 开源许可证</strong>，支持商业使用</div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">2</div>
-                <div>
+                <div class="section-num">2</div>
+                <div class="section-info">
                     <div class="section-title">核心架构创新</div>
                     <div class="section-subtitle">Architecture Innovations</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">混合注意力架构</div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🧠</div>
+                    <div class="info-card-title">混合注意力架构</div>
+                </div>
                 <ul class="feature-list">
-                    <li><strong>CSA (压缩稀疏注意力)</strong>：稀疏模式，减少计算量</li>
-                    <li><strong>HCA (重度压缩注意力)</strong>：高度压缩，最大化效率</li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">CSA (压缩稀疏注意力)</div>
+                            <div class="feature-desc">稀疏模式，减少计算量</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">HCA (重度压缩注意力)</div>
+                            <div class="feature-desc">高度压缩，最大化效率</div>
+                        </div>
+                    </li>
                 </ul>
-                <div class="callout">
+                <div class="callout-box">
                     <span class="callout-icon">🎯</span>
-                    <div class="callout-content">
-                        在100万token上下文场景下，V4-Pro仅需 <strong>27%</strong> 单token推理FLOPs，<strong>10%</strong> KV Cache
-                    </div>
+                    <div class="callout-text">在100万token上下文场景下，V4-Pro仅需 <strong>27%</strong> 单token推理FLOPs，<strong>10%</strong> KV Cache</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">mHC 流形约束超连接</div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🔗</div>
+                    <div class="info-card-title">mHC 流形约束超连接</div>
+                </div>
                 <ul class="feature-list">
-                    <li>强化传统残差连接</li>
-                    <li>保持模型表达能力</li>
-                    <li>增强跨层级信号传播稳定性</li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">强化传统残差连接</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">保持模型表达能力</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">增强跨层级信号传播稳定性</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
 
-            <div class="card">
-                <div class="card-title">技术亮点</div>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">⚙️</div>
+                    <div class="info-card-title">技术亮点</div>
+                </div>
                 <ul class="feature-list">
-                    <li><strong>Muon优化器</strong>：更快的收敛速度和更高的训练稳定性</li>
-                    <li><strong>训练数据</strong>：超过32万亿(32T) tokens</li>
-                    <li><strong>混合精度</strong>：MoE专家使用FP4，其他使用FP8</li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">Muon优化器</div>
+                            <div class="feature-desc">更快的收敛速度和更高的训练稳定性</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">训练数据</div>
+                            <div class="feature-desc">超过32万亿(32T) tokens</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">混合精度训练</div>
+                            <div class="feature-desc">MoE专家使用FP4，其他使用FP8</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">3</div>
-                <div>
+                <div class="section-num">3</div>
+                <div class="section-info">
                     <div class="section-title">主要技术特性</div>
                     <div class="section-subtitle">Key Features</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">百万token上下文窗口</div>
-                <p style="color: var(--text-secondary); margin-bottom: 16px;">DeepSeek V4 支持100万token的上下文窗口，理论上可容纳：</p>
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">📜</div>
+                    <div class="info-card-title">百万token上下文窗口</div>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">DeepSeek V4 支持100万token的上下文窗口，理论上可容纳：</p>
                 <ul class="feature-list">
-                    <li>15-20部完整小说</li>
-                    <li>500+文件的代码库</li>
-                    <li>数年的对话历史</li>
-                    <li>完整的法律发现文档集</li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">15-20部完整小说</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">500+文件的代码库</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">数年的对话历史</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-content">
+                            <div class="feature-name">完整的法律发现文档集</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
 
-            <div class="card">
-                <div class="card-title">可配置推理深度</div>
-                <div class="table-wrapper">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">⚡</div>
+                    <div class="info-card-title">可配置推理深度</div>
+                </div>
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -681,22 +901,25 @@
                         </tbody>
                     </table>
                 </div>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">输出格式通过 <code>[think]</code> 和 <code>[summary]</code> 标签区分</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 16px;">输出格式通过 <code>[think]</code> 和 <code>[summary]</code> 标签区分</p>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">4</div>
-                <div>
+                <div class="section-num">4</div>
+                <div class="section-info">
                     <div class="section-title">性能表现</div>
                     <div class="section-subtitle">Benchmark Results</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">基准测试成绩</div>
-                <div class="table-wrapper">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🏆</div>
+                    <div class="info-card-title">基准测试成绩</div>
+                </div>
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -708,22 +931,22 @@
                         <tbody>
                             <tr>
                                 <td>MMLU</td>
-                                <td><strong style="color: var(--accent-cyan);">90.1%</strong></td>
+                                <td><span class="table-highlight">90.1%</span></td>
                                 <td>超越GPT-5.4</td>
                             </tr>
                             <tr>
                                 <td>LiveCodeBench</td>
-                                <td><strong style="color: var(--accent-cyan);">93.5%</strong></td>
+                                <td><span class="table-highlight">93.5%</span></td>
                                 <td>排名第一</td>
                             </tr>
                             <tr>
                                 <td>Codeforces</td>
-                                <td><strong style="color: var(--accent-cyan);">3206分</strong></td>
+                                <td><span class="table-highlight">3206分</span></td>
                                 <td>顶级竞赛水平</td>
                             </tr>
                             <tr>
                                 <td>SWE Verified</td>
-                                <td><strong style="color: var(--accent-cyan);">80.6%</strong></td>
+                                <td><span class="table-highlight">80.6%</span></td>
                                 <td>开源第一</td>
                             </tr>
                         </tbody>
@@ -731,9 +954,12 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">成本对比</div>
-                <div class="table-wrapper">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">💵</div>
+                    <div class="info-card-title">成本对比</div>
+                </div>
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -744,41 +970,47 @@
                         <tbody>
                             <tr>
                                 <td>DeepSeek V4-Pro</td>
-                                <td><strong style="color: var(--accent-cyan);">$3.48</strong></td>
+                                <td><span class="table-highlight">$3.48</span></td>
                             </tr>
                             <tr>
                                 <td>Claude Opus 4.7</td>
-                                <td><strong>$25</strong></td>
+                                <td>$25</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="callout">
+                <div class="callout-box">
                     <span class="callout-icon">💡</span>
-                    <div class="callout-content">V4-Pro输出价格约为 Claude Opus 4.7 的 <strong>1/7</strong></div>
+                    <div class="callout-text">V4-Pro输出价格约为 Claude Opus 4.7 的 <strong>1/7</strong></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">5</div>
-                <div>
+                <div class="section-num">5</div>
+                <div class="section-info">
                     <div class="section-title">硬件与部署</div>
                     <div class="section-subtitle">Hardware & Deployment</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">训练硬件突破</div>
-                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🔧</div>
+                    <div class="info-card-title">训练硬件突破</div>
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
                     V4 使用<strong>华为昇腾910B</strong> (Huawei Ascend 910B) 和<strong>寒武纪MLU</strong> (Cambricon MLU) 芯片训练，未使用Nvidia硬件。这展示了在受出口限制情况下中国AI公司的技术突破。
                 </p>
             </div>
 
-            <div class="card">
-                <div class="card-title">本地运行硬件需求</div>
-                <div class="table-wrapper">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">🖥️</div>
+                    <div class="info-card-title">本地运行硬件需求</div>
+                </div>
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -803,36 +1035,56 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="content-section">
             <div class="section-header">
-                <div class="section-number">6</div>
-                <div>
+                <div class="section-num">6</div>
+                <div class="section-info">
                     <div class="section-title">相关链接</div>
                     <div class="section-subtitle">Resources</div>
                 </div>
             </div>
 
-            <div class="links-grid">
-                <a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" class="link-card" target="_blank">
-                    <span class="link-card-icon">▶️</span>
-                    <span>YouTube视频</span>
+            <div class="links-row">
+                <a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" class="link-tile" target="_blank">
+                    <span class="link-icon">▶️</span>
+                    <span class="link-label">YouTube视频</span>
                 </a>
-                <a href="https://github.com/MAX0315/c-cc/tree/main/DeepSeek_V4_笔记" class="link-card" target="_blank">
-                    <span class="link-card-icon">📂</span>
-                    <span>GitHub仓库</span>
+                <a href="https://github.com/MAX0315/c-cc/tree/main/DeepSeek_V4_笔记" class="link-tile" target="_blank">
+                    <span class="link-icon">📂</span>
+                    <span class="link-label">GitHub仓库</span>
                 </a>
-                <a href="https://feishu.cn/docx/Q0OPdtcT0omyo2xXAr4cP4EEnvb" class="link-card" target="_blank">
-                    <span class="link-card-icon">📄</span>
-                    <span>飞书文档</span>
+                <a href="https://feishu.cn/docx/Q0OPdtcT0omyo2xXAr4cP4EEnvb" class="link-tile" target="_blank">
+                    <span class="link-icon">📄</span>
+                    <span class="link-label">飞书文档</span>
                 </a>
             </div>
-        </div>
+        </section>
 
         <footer class="footer">
-            <p>整理自林亦LYi视频 | 最后更新：2026-05-15</p>
+            <p class="footer-text">整理自林亦LYi视频 | 最后更新：2026-05-15</p>
         </footer>
     </div>
+
+    <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const colors = ['#8b5cf6', '#06b6d4', '#ec4899', '#f59e0b'];
+
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.opacity = 0.2 + Math.random() * 0.3;
+            particle.style.width = (2 + Math.random() * 3) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
 </body>
 </html>
