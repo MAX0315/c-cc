@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>性能表现</title>
+</head>
+<body>
+  <h1>第四章：性能表现</h1>
+
+  <h2>4.1 Base模型基准测试</h2>
+
+  <table border="1">
+    <tr><th>基准测试</th><th>V3.2-Base</th><th>V4-Flash-Base</th><th>V4-Pro-Base</th></tr>
+    <tr><td><strong>MMLU (EM)</strong></td><td>87.8</td><td>88.7</td><td>90.1</td></tr>
+    <tr><td><strong>MMLU-Pro (EM)</strong></td><td>65.5</td><td>68.3</td><td>73.5</td></tr>
+    <tr><td><strong>GSM8K (8-shot)</strong></td><td>91.1</td><td>90.8</td><td>92.6</td></tr>
+    <tr><td><strong>HumanEval (Pass@1)</strong></td><td>62.8</td><td>69.5</td><td>76.8</td></tr>
+  </table>
+
+  <h2>4.2 V4-Pro-Max 顶级对比</h2>
+
+  <table border="1">
+    <tr><th>基准测试</th><th>DS-V4-Pro Max</th><th>Gemini-3.1-Pro</th><th>Opus-4.6 Max</th></tr>
+    <tr><td><strong>LiveCodeBench</strong></td><td>93.5</td><td>91.7</td><td>88.8</td></tr>
+    <tr><td><strong>GPQA Diamond</strong></td><td>90.1</td><td>94.3</td><td>91.3</td></tr>
+    <tr><td><strong>SWE Verified</strong></td><td>80.6</td><td>80.6</td><td>80.8</td></tr>
+  </table>
+
+  <h2>4.3 亮点成绩</h2>
+  <ul>
+    <li><strong>编程竞赛</strong>：Codeforces <strong>3206分</strong></li>
+    <li><strong>Agent任务</strong>：GDPval-AA <strong>1554</strong>（开源第一）</li>
+  </ul>
+
+  <p><strong>注意</strong>：V4 Pro 在 AA-Omniscience 基准上幻觉率为 94%，需注意置信度校准。</p>
+</body>
+</html>

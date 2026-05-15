@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>主要技术特性</title>
+</head>
+<body>
+  <h1>第三章：主要技术特性</h1>
+
+  <h2>3.1 百万token上下文窗口</h2>
+  <p>支持 <strong>100万 token</strong> 的上下文窗口，可容纳：</p>
+  <ul>
+    <li>15-20部完整小说</li>
+    <li>500+文件的代码库</li>
+    <li>数年的对话历史</li>
+  </ul>
+
+  <h2>3.2 可配置推理深度</h2>
+
+  <table border="1">
+    <tr><th>推理模式</th><th>特点</th><th>适用场景</th></tr>
+    <tr><td><strong>Non-think</strong></td><td>快速、直观、低延迟</td><td>简单聊天、常规任务</td></tr>
+    <tr><td><strong>Think High</strong></td><td>逻辑分析、中等延迟</td><td>复杂问题求解、规划、编程</td></tr>
+    <tr><td><strong>Think Max</strong></td><td>最大推理深度</td><td>高难度agent任务</td></tr>
+  </table>
+
+  <h2>3.3 MoE架构效率</h2>
+  <p>V4-Pro 总参数量达 1.6 万亿，但每次前向传播仅激活 <strong>490亿参数</strong>，推理成本与 V3 基本持平。</p>
+</body>
+</html>

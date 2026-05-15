@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>硬件与部署</title>
+</head>
+<body>
+  <h1>第六章：硬件与部署</h1>
+
+  <h2>6.1 训练硬件</h2>
+  <p>V4使用 <strong>华为昇腾910B</strong> 和 <strong>寒武纪MLU</strong> 芯片训练，未使用Nvidia硬件。这展示了在受出口限制情况下中国AI公司的技术突破。</p>
+
+  <h2>6.2 本地运行硬件需求</h2>
+
+  <table border="1">
+    <tr><th>配置</th><th>硬件要求</th></tr>
+    <tr><td>FP16/BF16 全精度</td><td>多节点GPU集群</td></tr>
+    <tr><td>INT8 量化</td><td>2x RTX 4090 (共48GB VRAM)</td></tr>
+    <tr><td>INT4 量化</td><td>1x RTX 5090 (32GB VRAM)</td></tr>
+  </table>
+
+  <h2>6.3 部署建议</h2>
+  <ul>
+    <li><strong>个人开发者</strong>：使用INT4量化，单卡RTX 5090即可运行</li>
+    <li><strong>企业部署</strong>：建议使用INT8量化或云端API</li>
+  </ul>
+</body>
+</html>

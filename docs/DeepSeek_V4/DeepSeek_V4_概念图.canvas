@@ -1,0 +1,135 @@
+{
+  "nodes": [
+    {
+      "id": "deepseek-v4",
+      "type": "text",
+      "x": 500,
+      "y": 300,
+      "width": 200,
+      "height": 80,
+      "text": "DeepSeek V4\n2026年4月24日发布"
+    },
+    {
+      "id": "pro-model",
+      "type": "text",
+      "x": 200,
+      "y": 150,
+      "width": 180,
+      "height": 100,
+      "text": "DeepSeek-V4-Pro\n总参数量: 1.6万亿\n激活参数: 490亿\n上下文: 100万tokens"
+    },
+    {
+      "id": "flash-model",
+      "type": "text",
+      "x": 200,
+      "y": 450,
+      "width": 180,
+      "height": 100,
+      "text": "DeepSeek-V4-Flash\n总参数量: 2840亿\n激活参数: 130亿\n上下文: 100万tokens"
+    },
+    {
+      "id": "architecture",
+      "type": "text",
+      "x": 500,
+      "y": 150,
+      "width": 200,
+      "height": 120,
+      "text": "核心架构\n• 混合注意力 (CSA+HCA)\n• mHC 流形约束超连接\n• MoE 混合专家\n• Muon优化器"
+    },
+    {
+      "id": "csa-hca",
+      "type": "text",
+      "x": 800,
+      "y": 50,
+      "width": 160,
+      "height": 80,
+      "text": "CSA 压缩稀疏注意力\nHCA 重度压缩注意力"
+    },
+    {
+      "id": "performance",
+      "type": "text",
+      "x": 800,
+      "y": 200,
+      "width": 180,
+      "height": 120,
+      "text": "性能基准\n• MMLU: 90.1%\n• SWE-bench: 80.6%\n• Codeforces: 3206"
+    },
+    {
+      "id": "cost",
+      "type": "text",
+      "x": 500,
+      "y": 450,
+      "width": 200,
+      "height": 100,
+      "text": "成本优势\n输入: $1.74/1M\n输出: $3.48/1M\n(Claude的1/7)"
+    },
+    {
+      "id": "hardware",
+      "type": "text",
+      "x": 800,
+      "y": 400,
+      "width": 180,
+      "height": 100,
+      "text": "训练硬件\n• 华为昇腾910B\n• 寒武纪MLU\n(未使用Nvidia)"
+    },
+    {
+      "id": "license",
+      "type": "text",
+      "x": 200,
+      "y": 300,
+      "width": 160,
+      "height": 60,
+      "text": "MIT 开源许可\n支持商业使用"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "deepseek-v4",
+      "to": "pro-model",
+      "label": "包含"
+    },
+    {
+      "id": "e2",
+      "from": "deepseek-v4",
+      "to": "flash-model",
+      "label": "包含"
+    },
+    {
+      "id": "e3",
+      "from": "deepseek-v4",
+      "to": "architecture",
+      "label": "采用"
+    },
+    {
+      "id": "e4",
+      "from": "architecture",
+      "to": "csa-hca",
+      "label": "包含"
+    },
+    {
+      "id": "e5",
+      "from": "architecture",
+      "to": "performance",
+      "label": "实现"
+    },
+    {
+      "id": "e6",
+      "from": "deepseek-v4",
+      "to": "cost",
+      "label": "具备"
+    },
+    {
+      "id": "e7",
+      "from": "deepseek-v4",
+      "to": "hardware",
+      "label": "训练于"
+    },
+    {
+      "id": "e8",
+      "from": "deepseek-v4",
+      "to": "license",
+      "label": "采用"
+    }
+  ]
+}

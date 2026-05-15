@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>操作指南</title>
+</head>
+<body>
+  <h1>第七章：操作指南</h1>
+
+  <h2>7.1 API接入步骤</h2>
+  <ol>
+    <li><strong>选择提供商</strong>：DeepInfra、SiliconFlow或其他支持供应商</li>
+    <li><strong>获取API密钥</strong>：在选定的服务商平台注册并获取密钥</li>
+    <li><strong>配置请求</strong>：设置适当的模型版本（Pro/Flash）</li>
+    <li><strong>设置推理模式</strong>：根据任务选择Non-think/Think High/Think Max</li>
+    <li><strong>处理响应</strong>：解析 <code> [think]</code> 和 <code> [summary]</code> 标签</li>
+  </ol>
+
+  <h2>7.2 应用场景选择</h2>
+
+  <table border="1">
+    <tr><th>场景</th><th>推荐模型</th><th>推理模式</th></tr>
+    <tr><td>简单问答</td><td>V4-Flash</td><td>Non-think</td></tr>
+    <tr><td>代码生成</td><td>V4-Pro</td><td>Think High</td></tr>
+    <tr><td>复杂Agent任务</td><td>V4-Pro</td><td>Think Max</td></tr>
+    <tr><td>长文档分析</td><td>V4-Pro</td><td>Think High</td></tr>
+  </table>
+
+  <h2>关键概念速查</h2>
+
+  <table border="1">
+    <tr><th>缩写</th><th>全称</th><th>说明</th></tr>
+    <tr><td>MoE</td><td>Mixture of Experts</td><td>混合专家架构</td></tr>
+    <tr><td>CSA</td><td>Compressed Sparse Attention</td><td>压缩稀疏注意力</td></tr>
+    <tr><td>HCA</td><td>Heavily Compressed Attention</td><td>重度压缩注意力</td></tr>
+    <tr><td>mHC</td><td>Manifold-Constrained Hyper-Connections</td><td>流形约束超连接</td></tr>
+  </table>
+
+  <h2>相关资源</h2>
+  <ul>
+    <li><strong>官网</strong>：https://www.deepseek.com</li>
+    <li><strong>模型下载</strong>：https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro</li>
+    <li><strong>API文档</strong>：https://deepinfra.com</li>
+  </ul>
+</body>
+</html>

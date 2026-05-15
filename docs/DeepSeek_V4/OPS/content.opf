@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title>DeepSeek V4 深度解读</dc:title>
+    <dc:creator>林亦LYi视频整理</dc:creator>
+    <dc:language>zh-CN</dc:language>
+    <dc:date>2026-04-24</dc:date>
+    <dc:description>DeepSeek V4 全面解读，包含核心架构、性能对比、操作指南</dc:description>
+    <dc:identifier id="BookId">urn:uuid:deepseek-v4-2026</dc:identifier>
+  </metadata>
+  <manifest>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+    <item id="chapter1" href="chapters/chapter1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter2" href="chapters/chapter2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter3" href="chapters/chapter3.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter4" href="chapters/chapter4.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter5" href="chapters/chapter5.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter6" href="chapters/chapter6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter7" href="chapters/chapter7.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter8" href="chapters/chapter8.xhtml" media-type="application/xhtml+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="chapter1"/>
+    <itemref idref="chapter2"/>
+    <itemref idref="chapter3"/>
+    <itemref idref="chapter4"/>
+    <itemref idref="chapter5"/>
+    <itemref idref="chapter6"/>
+    <itemref idref="chapter7"/>
+    <itemref idref="chapter8"/>
+  </spine>
+</package>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>核心架构创新</title>
+</head>
+<body>
+  <h1>第二章：核心架构创新</h1>
+
+  <h2>2.1 混合注意力架构</h2>
+  <p>DeepSeek V4 设计了结合两种注意力机制的混合架构：</p>
+
+  <table border="1">
+    <tr><th>注意力类型</th><th>缩写</th><th>说明</th></tr>
+    <tr><td>压缩稀疏注意力</td><td>CSA</td><td>稀疏模式，减少计算量</td></tr>
+    <tr><td>重度压缩注意力</td><td>HCA</td><td>高度压缩，最大化效率</td></tr>
+  </table>
+
+  <p>在100万 token 上下文场景下，V4-Pro 仅需 <strong>27%</strong> 单token推理FLOPs 和 <strong>10%</strong> KV Cache。</p>
+
+  <h2>2.2 流形约束超连接 (mHC)</h2>
+  <ul>
+    <li>强化传统残差连接</li>
+    <li>保持模型表达能力</li>
+    <li>增强跨层级信号传播稳定性</li>
+  </ul>
+
+  <h2>2.3 Muon优化器</h2>
+  <ul>
+    <li><strong>训练数据</strong>：超过32万亿(32T) tokens</li>
+    <li><strong>混合精度</strong>：MoE专家使用FP4，其他使用FP8</li>
+  </ul>
+</body>
+</html>

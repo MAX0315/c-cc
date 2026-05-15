@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta name="dtb:uid" content="urn:uuid:deepseek-v4-2026"/>
+    <meta name="dtb:depth" content="1"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>DeepSeek V4 深度解读</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="navPoint1" playOrder="1">
+      <navLabel><text>简介</text></navLabel>
+      <content src="chapters/chapter1.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint2" playOrder="2">
+      <navLabel><text>第一章：发布概况</text></navLabel>
+      <content src="chapters/chapter2.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint3" playOrder="3">
+      <navLabel><text>第二章：核心架构创新</text></navLabel>
+      <content src="chapters/chapter3.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint4" playOrder="4">
+      <navLabel><text>第三章：主要技术特性</text></navLabel>
+      <content src="chapters/chapter4.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint5" playOrder="5">
+      <navLabel><text>第四章：性能表现</text></navLabel>
+      <content src="chapters/chapter5.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint6" playOrder="6">
+      <navLabel><text>第五章：定价与成本</text></navLabel>
+      <content src="chapters/chapter6.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint7" playOrder="7">
+      <navLabel><text>第六章：硬件与部署</text></navLabel>
+      <content src="chapters/chapter7.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint8" playOrder="8">
+      <navLabel><text>第七章：操作指南</text></navLabel>
+      <content src="chapters/chapter8.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>
