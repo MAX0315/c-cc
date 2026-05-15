@@ -4,137 +4,835 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepSeek V4 深度解读</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0a1628;
+            --bg-card: rgba(15, 30, 60, 0.6);
+            --accent-cyan: #22d3ee;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+            --accent-orange: #f97316;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(148, 163, 184, 0.1);
+            --glow-cyan: rgba(34, 211, 238, 0.15);
+            --glow-blue: rgba(59, 130, 246, 0.15);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.7; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { font-size: 2em; color: #58a6ff; margin-bottom: 10px; }
-        h2 { font-size: 1.4em; color: #f78166; margin: 30px 0 15px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
-        h3 { font-size: 1.1em; color: #8b949e; margin: 20px 0 10px; }
-        .meta { color: #8b949e; font-size: 0.9em; margin-bottom: 20px; }
-        p { margin: 10px 0; }
-        ul { padding-left: 25px; margin: 10px 0; }
-        li { margin: 5px 0; }
-        .tag { display: inline-block; background: #238636; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
-        .highlight { background: #1a6b2a; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #238636; }
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th, td { border: 1px solid #30363d; padding: 10px; text-align: left; }
-        th { background: #161b22; color: #58a6ff; }
-        code { background: #161b22; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; }
-        a { color: #58a6ff; }
-        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.9em; }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated mesh background */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, var(--glow-cyan), transparent),
+                radial-gradient(ellipse 60% 40% at 90% 10%, var(--glow-blue), transparent),
+                radial-gradient(ellipse 50% 30% at 10% 90%, rgba(168, 85, 247, 0.08), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grid overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 70px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            margin-bottom: 24px;
+        }
+
+        .header-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        /* Meta info bar */
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .meta-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent-cyan);
+        }
+
+        .meta-item a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .meta-item a:hover { opacity: 0.8; }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: rgba(34, 211, 238, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Key highlights card */
+        .key-highlights {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 30, 60, 0.6));
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 60px;
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .key-highlights h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .key-points {
+            display: grid;
+            gap: 14px;
+        }
+
+        .key-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(34, 211, 238, 0.05);
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .key-point:hover {
+            border-color: rgba(34, 211, 238, 0.2);
+            transform: translateX(4px);
+        }
+
+        .key-point-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .key-point-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--bg-primary);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(34, 211, 238, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 2px;
+        }
+
+        /* Lists */
+        .feature-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .feature-list li::before {
+            content: '→';
+            color: var(--accent-cyan);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(34, 211, 238, 0.15);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(34, 211, 238, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(34, 211, 238, 0.1);
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        tr:hover td {
+            background: rgba(34, 211, 238, 0.03);
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(34, 211, 238, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: var(--accent-cyan);
+        }
+
+        /* Callout */
+        .callout {
+            display: flex;
+            gap: 14px;
+            padding: 18px 20px;
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .callout-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+        .callout-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Links section */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .link-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .link-card-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding: 40px 16px 80px; }
+            .meta-bar { gap: 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header h1 { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-mesh"></div>
+    <div class="grid-overlay"></div>
+
     <div class="container">
-        <h1>🧠 DeepSeek V4 深度解读</h1>
-        <div class="meta">
-            <span>📺 视频来源：<a href="https://www.youtube.com/watch?v=WDQjRzVcX-A">YouTube - 林亦LYi</a></span> |
-            <span>📅 发布日期：2026年4月24日</span>
+        <header class="header">
+            <div class="header-badge">🧠 深度解读</div>
+            <h1>DeepSeek V4 深度解读</h1>
+            <p class="subtitle">一个视频搞懂 DeepSeek V4</p>
+
+            <div class="meta-bar">
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                    </svg>
+                    <a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" target="_blank">YouTube - 林亦LYi</a>
+                </div>
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <span>2026年4月24日</span>
+                </div>
+            </div>
+
+            <div class="tags">
+                <span class="tag">MoE架构</span>
+                <span class="tag">100万token上下文</span>
+                <span class="tag">MIT开源</span>
+                <span class="tag">1.6万亿参数</span>
+            </div>
+        </header>
+
+        <section class="key-highlights">
+            <h2>💡 核心要点</h2>
+            <div class="key-points">
+                <div class="key-point">
+                    <span class="key-point-icon">⚡</span>
+                    <span class="key-point-text"><strong>1.6万亿</strong> 总参数量，激活490亿参数</span>
+                </div>
+                <div class="key-point">
+                    <span class="key-point-icon">📊</span>
+                    <span class="key-point-text"><strong>100万token</strong> 上下文，仅需27%推理FLOPs</span>
+                </div>
+                <div class="key-point">
+                    <span class="key-point-icon">💰</span>
+                    <span class="key-point-text">输出价格约为 Claude Opus 4.7 的 <strong>1/7</strong></span>
+                </div>
+                <div class="key-point">
+                    <span class="key-point-icon">🔓</span>
+                    <span class="key-point-text"><strong>MIT开源</strong> 许可证，支持商业使用</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div>
+                    <div class="section-title">发布概况</div>
+                    <div class="section-subtitle">Model Lineup</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">1.6T</div>
+                    <div class="stat-label">DeepSeek-V4-Pro 总参数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">284B</div>
+                    <div class="stat-label">DeepSeek-V4-Flash 总参数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">100万</div>
+                    <div class="stat-label">上下文窗口 tokens</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">MIT</div>
+                    <div class="stat-label">开源许可证</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">模型阵容</div>
+                <ul class="feature-list">
+                    <li><strong>DeepSeek-V4-Pro</strong>：1.6万亿参数，激活490亿参数，100万token上下文</li>
+                    <li><strong>DeepSeek-V4-Flash</strong>：2840亿参数，激活130亿参数，100万token上下文</li>
+                </ul>
+            </div>
         </div>
-        <div style="margin: 15px 0;">
-            <span class="tag">MoE架构</span>
-            <span class="tag">100万token上下文</span>
-            <span class="tag">MIT开源</span>
-            <span class="tag">1.6万亿参数</span>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div>
+                    <div class="section-title">核心架构创新</div>
+                    <div class="section-subtitle">Architecture Innovations</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">混合注意力架构</div>
+                <ul class="feature-list">
+                    <li><strong>CSA (压缩稀疏注意力)</strong>：稀疏模式，减少计算量</li>
+                    <li><strong>HCA (重度压缩注意力)</strong>：高度压缩，最大化效率</li>
+                </ul>
+                <div class="callout">
+                    <span class="callout-icon">🎯</span>
+                    <div class="callout-content">
+                        在100万token上下文场景下，V4-Pro仅需 <strong>27%</strong> 单token推理FLOPs，<strong>10%</strong> KV Cache
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">mHC 流形约束超连接</div>
+                <ul class="feature-list">
+                    <li>强化传统残差连接</li>
+                    <li>保持模型表达能力</li>
+                    <li>增强跨层级信号传播稳定性</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">技术亮点</div>
+                <ul class="feature-list">
+                    <li><strong>Muon优化器</strong>：更快的收敛速度和更高的训练稳定性</li>
+                    <li><strong>训练数据</strong>：超过32万亿(32T) tokens</li>
+                    <li><strong>混合精度</strong>：MoE专家使用FP4，其他使用FP8</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="highlight">
-            <strong>💡 核心要点</strong><br>
-            • 1.6万亿总参数量，激活490亿参数<br>
-            • 100万token上下文，仅需27%推理FLOPs<br>
-            • 输出价格约为Claude Opus 4.7的1/7<br>
-            • MIT开源许可，支持商业使用
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div>
+                    <div class="section-title">主要技术特性</div>
+                    <div class="section-subtitle">Key Features</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">百万token上下文窗口</div>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">DeepSeek V4 支持100万token的上下文窗口，理论上可容纳：</p>
+                <ul class="feature-list">
+                    <li>15-20部完整小说</li>
+                    <li>500+文件的代码库</li>
+                    <li>数年的对话历史</li>
+                    <li>完整的法律发现文档集</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">可配置推理深度</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>推理模式</th>
+                                <th>特点</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Non-think</strong></td>
+                                <td>快速、直观、低延迟</td>
+                                <td>简单聊天、常规任务</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Think High</strong></td>
+                                <td>逻辑分析、中等延迟</td>
+                                <td>复杂问题求解、规划、编程</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Think Max</strong></td>
+                                <td>最大推理深度</td>
+                                <td>高难度agent任务、极限逻辑</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">输出格式通过 <code>[think]</code> 和 <code>[summary]</code> 标签区分</p>
+            </div>
         </div>
 
-        <h2>一、发布概况</h2>
-        <p>DeepSeek V4 于 2026年4月24日 发布，包含两款模型：</p>
-        <ul>
-            <li><strong>DeepSeek-V4-Pro</strong>：1.6万亿参数，激活490亿参数，100万token上下文</li>
-            <li><strong>DeepSeek-V4-Flash</strong>：2840亿参数，激活130亿参数，100万token上下文</li>
-        </ul>
-        <p>两款模型均采用 <strong>MIT 开源许可证</strong>，支持商业使用。</p>
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div>
+                    <div class="section-title">性能表现</div>
+                    <div class="section-subtitle">Benchmark Results</div>
+                </div>
+            </div>
 
-        <h2>二、核心架构创新</h2>
-        <h3>混合注意力架构</h3>
-        <ul>
-            <li><strong>CSA (压缩稀疏注意力)</strong>：稀疏模式，减少计算量</li>
-            <li><strong>HCA (重度压缩注意力)</strong>：高度压缩，最大化效率</li>
-        </ul>
-        <p>在100万token上下文场景下，V4-Pro仅需 <strong>27%</strong> 单token推理FLOPs，<strong>10%</strong> KV Cache。</p>
+            <div class="card">
+                <div class="card-title">基准测试成绩</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>基准测试</th>
+                                <th>成绩</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MMLU</td>
+                                <td><strong style="color: var(--accent-cyan);">90.1%</strong></td>
+                                <td>超越GPT-5.4</td>
+                            </tr>
+                            <tr>
+                                <td>LiveCodeBench</td>
+                                <td><strong style="color: var(--accent-cyan);">93.5%</strong></td>
+                                <td>排名第一</td>
+                            </tr>
+                            <tr>
+                                <td>Codeforces</td>
+                                <td><strong style="color: var(--accent-cyan);">3206分</strong></td>
+                                <td>顶级竞赛水平</td>
+                            </tr>
+                            <tr>
+                                <td>SWE Verified</td>
+                                <td><strong style="color: var(--accent-cyan);">80.6%</strong></td>
+                                <td>开源第一</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <h3>mHC 流形约束超连接</h3>
-        <ul>
-            <li>强化传统残差连接</li>
-            <li>保持模型表达能力</li>
-            <li>增强跨层级信号传播稳定性</li>
-        </ul>
+            <div class="card">
+                <div class="card-title">成本对比</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>模型</th>
+                                <th>输出价格 (每百万tokens)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DeepSeek V4-Pro</td>
+                                <td><strong style="color: var(--accent-cyan);">$3.48</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Claude Opus 4.7</td>
+                                <td><strong>$25</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="callout">
+                    <span class="callout-icon">💡</span>
+                    <div class="callout-content">V4-Pro输出价格约为 Claude Opus 4.7 的 <strong>1/7</strong></div>
+                </div>
+            </div>
+        </div>
 
-        <h3>技术亮点</h3>
-        <ul>
-            <li><strong>Muon优化器</strong>：更快的收敛速度和更高的训练稳定性</li>
-            <li><strong>训练数据</strong>：超过32万亿(32T) tokens</li>
-            <li><strong>混合精度</strong>：MoE专家使用FP4，其他使用FP8</li>
-        </ul>
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <div>
+                    <div class="section-title">硬件与部署</div>
+                    <div class="section-subtitle">Hardware & Deployment</div>
+                </div>
+            </div>
 
-        <h2>三、主要技术特性</h2>
-        <h3>百万token上下文窗口</h3>
-        <p>DeepSeek V4 支持100万token的上下文窗口，理论上可容纳：</p>
-        <ul>
-            <li>15-20部完整小说</li>
-            <li>500+文件的代码库</li>
-            <li>数年的对话历史</li>
-            <li>完整的法律发现文档集</li>
-        </ul>
+            <div class="card">
+                <div class="card-title">训练硬件突破</div>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    V4 使用<strong>华为昇腾910B</strong> (Huawei Ascend 910B) 和<strong>寒武纪MLU</strong> (Cambricon MLU) 芯片训练，未使用Nvidia硬件。这展示了在受出口限制情况下中国AI公司的技术突破。
+                </p>
+            </div>
 
-        <h3>可配置推理深度</h3>
-        <table>
-            <tr><th>推理模式</th><th>特点</th><th>适用场景</th></tr>
-            <tr><td><strong>Non-think</strong></td><td>快速、直观、低延迟</td><td>简单聊天、常规任务</td></tr>
-            <tr><td><strong>Think High</strong></td><td>逻辑分析、中等延迟</td><td>复杂问题求解、规划、编程</td></tr>
-            <tr><td><strong>Think Max</strong></td><td>最大推理深度</td><td>高难度agent任务、极限逻辑</td></tr>
-        </table>
-        <p>输出格式通过 <code>[think]</code> 和 <code>[summary]</code> 标签区分。</p>
+            <div class="card">
+                <div class="card-title">本地运行硬件需求</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>精度</th>
+                                <th>硬件要求</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FP16/BF16 全精度</td>
+                                <td>多节点GPU集群</td>
+                            </tr>
+                            <tr>
+                                <td>INT8 量化</td>
+                                <td>2x RTX 4090 (共48GB VRAM)</td>
+                            </tr>
+                            <tr>
+                                <td>INT4 量化</td>
+                                <td>1x RTX 5090 (32GB VRAM)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-        <h2>四、性能表现</h2>
-        <h3>基准测试成绩</h3>
-        <table>
-            <tr><th>基准测试</th><th>DeepSeek-V4-Pro</th><th>对比</th></tr>
-            <tr><td>MMLU</td><td>90.1%</td><td>超越GPT-5.4</td></tr>
-            <tr><td>LiveCodeBench</td><td>93.5%</td><td>排名第一</td></tr>
-            <tr><td>Codeforces</td><td>3206分</td><td>顶级竞赛水平</td></tr>
-            <tr><td>SWE Verified</td><td>80.6%</td><td>开源第一</td></tr>
-        </table>
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <div>
+                    <div class="section-title">相关链接</div>
+                    <div class="section-subtitle">Resources</div>
+                </div>
+            </div>
 
-        <h3>成本对比</h3>
-        <table>
-            <tr><th>模型</th><th>输出价格</th></tr>
-            <tr><td>DeepSeek V4-Pro</td><td>$3.48/百万tokens</td></tr>
-            <tr><td>Claude Opus 4.7</td><td>$25/百万tokens</td></tr>
-        </table>
-        <p>V4-Pro输出价格约为Claude Opus 4.7的 <strong>1/7</strong></p>
+            <div class="links-grid">
+                <a href="https://www.youtube.com/watch?v=WDQjRzVcX-A" class="link-card" target="_blank">
+                    <span class="link-card-icon">▶️</span>
+                    <span>YouTube视频</span>
+                </a>
+                <a href="https://github.com/MAX0315/c-cc/tree/main/DeepSeek_V4_笔记" class="link-card" target="_blank">
+                    <span class="link-card-icon">📂</span>
+                    <span>GitHub仓库</span>
+                </a>
+                <a href="https://feishu.cn/docx/Q0OPdtcT0omyo2xXAr4cP4EEnvb" class="link-card" target="_blank">
+                    <span class="link-card-icon">📄</span>
+                    <span>飞书文档</span>
+                </a>
+            </div>
+        </div>
 
-        <h2>五、硬件与部署</h2>
-        <p><strong>训练硬件</strong>：华为昇腾910B (Huawei Ascend 910B) 和寒武纪MLU (Cambricon MLU)，未使用Nvidia硬件。这展示了在受出口限制情况下中国AI公司的技术突破。</p>
-
-        <h3>本地运行硬件需求</h3>
-        <table>
-            <tr><th>精度</th><th>硬件要求</th></tr>
-            <tr><td>FP16/BF16</td><td>多节点GPU集群</td></tr>
-            <tr><td>INT8</td><td>2x RTX 4090 (共48GB VRAM)</td></tr>
-            <tr><td>INT4</td><td>1x RTX 5090 (32GB VRAM)</td></tr>
-        </table>
-
-        <h2>六、相关链接</h2>
-        <ul>
-            <li><a href="https://www.youtube.com/watch?v=WDQjRzVcX-A">▶️ YouTube视频</a></li>
-            <li><a href="https://github.com/MAX0315/c-cc/tree/main/DeepSeek_V4_笔记">📂 GitHub仓库</a></li>
-            <li><a href="https://feishu.cn/docx/Q0OPdtcT0omyo2xXAr4cP4EEnvb">📄 飞书文档</a></li>
-        </ul>
-
-        <div class="footer">
+        <footer class="footer">
             <p>整理自林亦LYi视频 | 最后更新：2026-05-15</p>
-        </div>
+        </footer>
     </div>
 </body>
 </html>
